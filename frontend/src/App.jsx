@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Materials from './pages/Materials'
+import Login from './pages/Login'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -10,6 +11,7 @@ function App() {
       <Route path="materials" element={<Materials />} >
 
       </Route>
+      <Route path='' element={<Login />} />
     </Routes>
   )
 }
