@@ -10,7 +10,17 @@ const Login = ({ setUserId }) => {
       setUserId(res.data.id);
       localStorage.setItem('id', res.data.id);
     },
-    onError: res => {}
+    onError: res => {
+      console.log(res.response.status);
+      switch (res.response.status) {
+        case 404:
+          console.log('no users');
+          break;
+        case 403:
+          console.log('the password is not right');
+          break;
+      }
+    }
   })
 
   const handleSubmit = e => {
