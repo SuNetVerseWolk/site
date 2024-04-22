@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import Warn from 'components/Warn'
-import { useAnimate, usePresence } from 'framer-motion'
+import { useAnimate } from 'framer-motion'
 import React, { useState } from 'react'
 import styles from 'styles/formStyle.module.css'
 import { motion } from 'framer-motion'
