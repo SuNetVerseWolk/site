@@ -1,23 +1,42 @@
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
-import React from 'react'
+import Warn from 'components/Warn'
+import { useAnimate, usePresence } from 'framer-motion'
+import React, { useState } from 'react'
 import styles from 'styles/formStyle.module.css'
+import { motion } from 'framer-motion'
 
 const Login = ({ setUserId }) => {
-  const {mutate} = useMutation({
+  const [isWarned, setIsWarned] = useState(true);
+  const [warn, animateWarn] = useAnimate();
+  const [warnText, setWarnText] = useState();
+
+  const showWarn = async text => {
+    if (isWarned) {
+      setIsWarned(false)
+      setWarnText(text);
+
+      await animateWarn(warn.current, { y: '100%', scaleY: 1 })
+      setTimeout(e => setWarnText(''), 3480)
+      await animateWarn(warn.current, { y: '0', scaleY: .1 }, {delay: 3.5, ease: 'easeIn'})
+      setIsWarned(true)
+    }
+  }
+
+  const { mutate } = useMutation({
     mutationFn: data => axios.post('/api/logIn', data),
     onSuccess: res => {
       setUserId(res.data.id);
       localStorage.setItem('id', res.data.id);
     },
     onError: res => {
-      console.log(res.response.status);
       switch (res.response.status) {
         case 404:
-          console.log('no users');
+          showWarn('Нет такого пользователя!')
+
           break;
         case 403:
-          console.log('the password is not right');
+          showWarn('Пароль неверный!');
           break;
       }
     }
@@ -39,12 +58,14 @@ const Login = ({ setUserId }) => {
           <input name='name' type="text" placeholder='Фамилия Имя Отчество' required />
 
           <label htmlFor="password">Пароль: <img src="/padlock.png" alt="" /></label>
-          <input name='password' type="password"placeholder='Пароль' required />
+          <input name='password' type="password" placeholder='Пароль' required />
 
-          <button>Войти</button>
+          <motion.button whileTap={{scaleX: .85, scaleY: .95}}>Войти</motion.button>
         </div>
 
         <img src="/imageAddition.png" alt="" />
+
+        <Warn localRef={warn}>{warnText}</Warn>
       </form>
     </div>
   )
