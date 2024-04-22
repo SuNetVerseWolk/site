@@ -1,10 +1,27 @@
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 import React from 'react'
 import styles from 'styles/formStyle.module.css'
 
-const Login = () => {
+const Login = ({ setUserId }) => {
+  const {mutate} = useMutation({
+    mutationFn: data => axios.post('/api/logIn', data),
+    onSuccess: res => {
+      setUserId(res.data.id);
+      localStorage.setItem('id', res.data.id);
+    },
+    onError: res => {}
+  })
+
+  const handleSubmit = e => {
+    e.preventDefault();
+
+    mutate(Object.fromEntries(new FormData(e.target).entries()));
+  }
+
   return (
     <div className={styles.container}>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div>
           <h1>Вход</h1>
 

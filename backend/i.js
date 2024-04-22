@@ -99,9 +99,11 @@ app.post('/teachersMaterials/:id', (req, res) => {
 	res.json(true);
 })
 
-app.post('/signIn', (req, res) => {
+app.post('/logIn', (req, res) => {
 	const people = getData(dataPaths.teachers);
 	const person = people.find(p => p.name === req.body.name);
+
+	console.log(person)
 
     if (person) {
         const { id, password } = person;
