@@ -1,14 +1,14 @@
 const
-	port = process.env.PORT || 3001,
-	express = require('express'),
-	cors = require('cors'),
-	app = express(),
-	dataPaths = {
-        students: 'students',
-        teachers: 'teachers',
-        teachersMaterials: 'teachersMaterials'
-    },
-	{ setData, getData } = require('./getScripts');
+port = process.env.PORT || 3001,
+express = require('express'),
+cors = require('cors'),
+app = express(),
+dataPaths = {
+	students: 'students',
+	teachers: 'teachers',
+	teachersMaterials: 'teachersMaterials'
+},
+{ setData, getData } = require('./getScripts');
 
 app.use(cors());
 app.use(express.json({ limit: '100mb' }));
@@ -27,8 +27,9 @@ const defaultUserData = {
 Object.keys(dataPaths).forEach(dataPath => {
 	app.get(`/${dataPath}`, (req, res) => {
 		const
-			filter = req.query?.filter,
-			data = getData(dataPath);
+		filter = req.query?.filter,
+		data = getData(dataPath);
+
 		console.log(filter)
 
 		res.json(getFilteredData(data, filter, dataPath))
@@ -36,8 +37,8 @@ Object.keys(dataPaths).forEach(dataPath => {
 
 	app.post(`/${dataPath}`, (req, res) => {
 		const
-			newItem = getNewItem(req, res),
-			data = getData(dataPath);
+		newItem = getNewItem(req, res),
+		data = getData(dataPath);
 
 		if (newItem) {
 			data.push(newItem);
@@ -50,8 +51,8 @@ Object.keys(dataPaths).forEach(dataPath => {
 
 	app.delete(`/${dataPath}/:id`, (req, res) => {
 		const
-			itemId = +req.params.id,
-			data = getData(dataPath);
+		itemId = +req.params.id,
+		data = getData(dataPath);
 
 		for (var i = 0; i < data.length; i++) {
 			if (itemId === data[i].id) {
@@ -76,9 +77,9 @@ app.get('/teachersMaterials/:id', (req, res) => {
 
 app.get('/teacher/:id', (req, res) => {
 	const
-		people = getData(dataPaths.teachers),
-		person = people.find(p => p.id === +req.params.id),
-		{name, avatar, communities, friends, patterns} = person;
+	people = getData(dataPaths.teachers),
+	person = people.find(p => p.id === +req.params.id),
+	{name, avatar, communities, friends, patterns} = person;
 
 	console.log(req.params.id)
 	if (person) return res.json({name, avatar, communities, friends, patterns})
@@ -89,8 +90,8 @@ app.get('/teacher/:id', (req, res) => {
 
 app.post('/teachersMaterials/:id', (req, res) => {
 	const
-		patterns = getData(dataPaths.teachersMaterials),
-		pattern = patterns.find(pattern => pattern.id === +req.params.id);
+	patterns = getData(dataPaths.teachersMaterials),
+	pattern = patterns.find(pattern => pattern.id === +req.params.id);
 
 	if (!pattern) return res.status(404).json(false);
 	pattern.cards = req.body;
@@ -100,10 +101,10 @@ app.post('/teachersMaterials/:id', (req, res) => {
 })
 
 app.post('/logIn', (req, res) => {
-	const people = getData(dataPaths.teachers);
-	const person = people.find(p => p.name === req.body.name);
-
-	console.log(person)
+	const
+	teachers = getData(dataPaths.teachers),
+	students = getData(dataPaths.students),
+	person = teachers.find(teacher => teacher.name === req.body.name) || students.find(student => student.name === req.body.name);
 
     if (person) {
         const { id, password } = person;
@@ -115,6 +116,5 @@ app.post('/logIn', (req, res) => {
     }
     else res.status(404).json(false);
 })
-
 
 app.listen(port, e => console.log(`DB keeps on ${port}`));
