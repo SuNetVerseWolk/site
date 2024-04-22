@@ -100,10 +100,10 @@ app.post('/teachersMaterials/:id', (req, res) => {
 })
 
 app.post('/logIn', (req, res) => {
-	const people = getData(dataPaths.teachers);
-	const person = people.find(p => p.name === req.body.name);
-
-	console.log(person)
+	const
+	teachers = getData(dataPaths.teachers),
+	students = getData(dataPaths.students),
+	person = teachers.find(teacher => teacher.name === req.body.name) || students.find(student => student.name === req.body.name);
 
     if (person) {
         const { id, password } = person;
@@ -115,6 +115,5 @@ app.post('/logIn', (req, res) => {
     }
     else res.status(404).json(false);
 })
-
 
 app.listen(port, e => console.log(`DB keeps on ${port}`));
