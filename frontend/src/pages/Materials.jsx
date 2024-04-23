@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from 'styles/presStyle.module.css'
+import { motion } from 'framer-motion'
 
 const Materials = () => {
   return (
@@ -10,7 +11,7 @@ const Materials = () => {
         <div>
           <p>Лу Луин Лоун</p>
 
-          <button><img src="/exit.png" alt="..." /></button>
+          <motion.button whileTap={{scaleX: .85, scaleY: .95}}><img src="/exit.png" alt="..." /></motion.button>
         </div>
       </header>
       
@@ -28,7 +29,7 @@ const Materials = () => {
           <div></div>
           <div></div>
 
-          <button>+</button>
+          <motion.button whileTap={{scale: .9}}>+</motion.button>
         </div>
         <div className={styles.editor}>
           <div></div>
