@@ -31,7 +31,7 @@
             button {
                 display: flex;
                 align-items: center;
-                
+
                 aspect-ratio: 1;
                 background: none;
                 border: none;
@@ -88,5 +88,16 @@
         &:hover {
             background: #4292dc;
         }
+    }
+}
+
+.editor {
+    display: grid;
+    grid-template-columns: 80% 20%;
+
+    div {
+        margin: 10px;
+        border-radius: 10px;
+        background: #efefef;
     }
 }

@@ -1,5 +1,4 @@
 import React from 'react'
-import { Outlet } from 'react-router-dom'
 import styles from 'styles/presStyle.module.css'
 
 const Materials = () => {
@@ -31,8 +30,9 @@ const Materials = () => {
 
           <button>+</button>
         </div>
-        <div>
-          <Outlet />
+        <div className={styles.editor}>
+          <div></div>
+          <div></div>
         </div>
       </div>
     </div>
