@@ -62,8 +62,9 @@
     align-items: center;
     gap: 10px;
 
-    overflow-y: scroll;
     padding: 20px;
+
+    overflow-y: scroll;
     
     &::-webkit-scrollbar {
         display: none;

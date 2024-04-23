@@ -29,21 +29,22 @@ const Materials = ({ setUserId, userId }) => {
       </header>
 
       <div>
-        <div className={styles.asideBar}>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
+        <motion.div className={styles.asideBar}>
+          <motion.div whileInView={{scale: 1}} initial={{scale: .9}}></motion.div>
+          <motion.div whileInView={{scale: 1}} initial={{scale: .9}}></motion.div>
+          <motion.div whileInView={{scale: 1}} initial={{scale: .9}}></motion.div>
+          <motion.div whileInView={{scale: 1}} initial={{scale: .9}}></motion.div>
+          <motion.div whileInView={{scale: 1}} initial={{scale: .9}}></motion.div>
+          <motion.div whileInView={{scale: 1}} initial={{scale: .9}}></motion.div>
+          <motion.div whileInView={{scale: 1}} initial={{scale: .9}}></motion.div>
+          <motion.div whileInView={{scale: 1}} initial={{scale: .9}}></motion.div>
+          <motion.div whileInView={{scale: 1}} initial={{scale: .9}}></motion.div>
+          <motion.div whileInView={{scale: 1}} initial={{scale: .9}}></motion.div>
+          <motion.div whileInView={{scale: 1}} initial={{scale: .9}}></motion.div>
+          <motion.div whileInView={{scale: 1}} initial={{scale: .9}}></motion.div>
 
           <motion.button whileTap={{ scale: .9 }}>+</motion.button>
-        </div>
+        </motion.div>
         <div className={styles.editor}>
           <div></div>
           <div></div>
