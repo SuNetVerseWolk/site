@@ -17,8 +17,8 @@ const Login = ({ setUserId }) => {
       setWarnText(text);
 
       await animateWarn(warn.current, { y: '100%', scaleY: 1 })
-      setTimeout(e => setWarnText(''), 3480)
-      await animateWarn(warn.current, { y: '0', scaleY: .1 }, {delay: 3.5, ease: 'easeIn'})
+      setTimeout(e => setWarnText(''), 3000)
+      await animateWarn(warn.current, { y: '0', scaleY: .1 }, { duration: .1, delay: 3, ease: 'easeIn' })
       setIsWarned(true)
     }
   }
@@ -60,7 +60,7 @@ const Login = ({ setUserId }) => {
           <label htmlFor="password">Пароль: <img src="/padlock.png" alt="" /></label>
           <input name='password' type="password" placeholder='Пароль' required />
 
-          <motion.button whileTap={{scaleX: .85, scaleY: .95}}>Войти</motion.button>
+          <motion.button whileTap={{ scaleX: .85, scaleY: .95 }}>Войти</motion.button>
         </div>
 
         <img src="/imageAddition.png" alt="" />
