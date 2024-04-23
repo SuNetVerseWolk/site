@@ -2,7 +2,13 @@ import React from 'react'
 import styles from 'styles/presStyle.module.css'
 import { motion } from 'framer-motion'
 
-const Materials = () => {
+const Materials = ({ setUserId }) => {
+  const exit = () => {
+    setUserId('');
+    
+    localStorage.setItem('id', '');
+  }
+
   return (
     <div className={styles.presContainer}>
       <header>
@@ -11,7 +17,7 @@ const Materials = () => {
         <div>
           <p>Лу Луин Лоун</p>
 
-          <motion.button whileTap={{scaleX: .85, scaleY: .95}}><img src="/exit.png" alt="..." /></motion.button>
+          <motion.button whileTap={{scaleX: .85, scaleY: .95}} onClick={exit}><img src="/exit.png" alt="..." /></motion.button>
         </div>
       </header>
       
