@@ -1,0 +1,92 @@
+.presContainer {
+    display: grid;
+    grid-template-rows: 7% 93%;
+
+    height: 100%;
+
+    header {
+        display: grid;
+        grid-template-columns: 80% 20%;
+        justify-items: center;
+        align-items: baseline;
+
+        padding: 10px;
+        /* background: red; */
+
+        h1 {
+            font-family: Dancing Script;
+            font-size: 40px;
+            translate: 50% 0;
+        }
+
+        div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            p {
+                font-size: 20px;
+            }
+            
+            button {
+                display: flex;
+                align-items: center;
+                
+                aspect-ratio: 1;
+                background: none;
+                border: none;
+
+                img {
+                    height: 25px;
+                }
+            }
+        }
+    }
+
+    > div {
+        display: grid;
+        grid-template-columns: 20% 80%;
+
+        background: #dadada;
+
+        > div {
+            background: #ffffff;
+            border-radius: 5px;
+            margin: 10px;
+        }
+    }
+}
+
+.asideBar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    overflow-y: scroll;
+    padding: 20px;
+    
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    div {
+        background: #efefef;
+        width: 100%;
+        min-height: 200px;
+    }
+
+    button {
+        font-size: 30px;
+        padding: 10px;
+        background: #6dabe4;
+        color: #fffffff6;
+        border: none;
+        border-radius: 100%;
+        aspect-ratio: 1;
+
+        &:hover {
+            background: #4292dc;
+        }
+    }
+}
