@@ -79,10 +79,11 @@ app.get('/teacher/:id', (req, res) => {
 	const
 	people = getData(dataPaths.teachers),
 	person = people.find(p => p.id === +req.params.id),
-	{name, avatar, communities, friends, patterns} = person;
+	{name} = person;
 
 	console.log(req.params.id)
-	if (person) return res.json({name, avatar, communities, friends, patterns})
+	console.log(name)
+	if (person) return res.json({name})
 
 	res.status(404).json(false);
 })

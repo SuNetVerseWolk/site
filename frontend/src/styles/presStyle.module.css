@@ -6,17 +6,15 @@
 
     header {
         display: grid;
-        grid-template-columns: 80% 20%;
-        justify-items: center;
+        grid-template-columns: 5fr 1fr;
         align-items: baseline;
 
         padding: 10px;
-        /* background: red; */
 
         h1 {
             font-family: Dancing Script;
             font-size: 40px;
-            translate: 50% 0;
+            text-align: center;
         }
 
         div {
@@ -25,7 +23,8 @@
             gap: 10px;
 
             p {
-                font-size: 20px;
+                font-size: 15px;
+                text-wrap: nowrap;
             }
             
             button {
