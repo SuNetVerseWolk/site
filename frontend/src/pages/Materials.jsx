@@ -3,7 +3,7 @@ import styles from 'styles/presStyle.module.css'
 import { motion } from 'framer-motion'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-import Item from './Item'
+import Item from '../components/Item'
 
 const Materials = ({ setUserId, userId }) => {
   const [theme, setTheme] = useState([]);
