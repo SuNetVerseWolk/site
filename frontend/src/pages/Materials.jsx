@@ -11,7 +11,6 @@ const setCursorPosition = (el) => {
   const range = document.createRange();
   const sel = window.getSelection();
 
-  console.log(el.childNodes[0]);
   range.setStart(el.childNodes[0], 5);
   range.collapse(true);
 
@@ -55,7 +54,7 @@ const Materials = ({ setUserId, userId }) => {
   return (
     <div className={styles.presContainer}>
       <header>
-        <h1>Презентация</h1>
+        <h1>Материал для обучения</h1>
 
         <div>
           <p>{userData.data?.name}</p>
@@ -86,8 +85,8 @@ const Materials = ({ setUserId, userId }) => {
               return [...prev];
             })}>{themes.find(item => item.id === +id)?.value}</h1>
           </div>
-          <div>
-            <AddButton>Заголовок</AddButton>
+          <div className={styles.addElementsContainer}>
+            <AddButton />
           </div>
         </div>
       </div>
