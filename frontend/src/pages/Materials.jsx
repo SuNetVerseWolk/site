@@ -41,7 +41,8 @@ const Materials = ({ setUserId, userId }) => {
 
       <div>
         <motion.div className={styles.asideBar}>
-          <motion.div whileInView={{scale: 1}} initial={{scale: .9}}></motion.div>
+          <Item></Item>
+
           {
             theme.map((item, index) => (
               <Item key={index}/>
