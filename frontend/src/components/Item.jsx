@@ -1,15 +1,12 @@
 import React from 'react'
-import { motion } from 'framer-motion'
+import { calcLength, motion } from 'framer-motion'
+import { NavLink } from 'react-router-dom';
 
-const autoResize = (e) =>{
-  e.target.style.height = 'auto';
-  e.target.style.height = e.target.scrollHeight + 'px';
-}
-
-const Item = ({ index, children }) => {
+const Item = ({ index, children, setIsEditable }) => {
+  // console.log(index);
   return (
-    <motion.div whileInView={{ scale: 1 }} initial={{ scale: .9 }} >
-      <textarea onInput={autoResize} contentEditable>{children}</textarea>
+    <motion.div whileInView={{ scale: 1 }} initial={{ scale: .9 }} onClick={e => setIsEditable(true)}>
+      <NavLink to={`${index}`}>{children}</NavLink>
     </motion.div>
   )
 }

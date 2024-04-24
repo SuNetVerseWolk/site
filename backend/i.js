@@ -27,12 +27,12 @@ const defaultUserData = {
 Object.keys(dataPaths).forEach(dataPath => {
 	app.get(`/${dataPath}`, (req, res) => {
 		const
-		filter = req.query?.filter,
+		// filter = req.query?.filter,
 		data = getData(dataPath);
 
-		console.log(filter)
+		console.log(data)
 
-		res.json(getFilteredData(data, filter, dataPath))
+		res.json(data)
 	});
 
 	app.post(`/${dataPath}`, (req, res) => {

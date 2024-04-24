@@ -10,7 +10,7 @@ function App() {
   return (
     <Routes>
       <Route path='' element={userId ? <Materials userId={userId} setUserId={setUserId} /> : <Login setUserId={setUserId} />} >
-        <Route path=':title' element={<></>} />
+        <Route path=':id' element={<></>} />
       </Route>
     </Routes>
   )
