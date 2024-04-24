@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import Item from '../components/Item'
+import AddButton from 'components/AddButton'
 
 const Materials = ({ setUserId, userId }) => {
   const [theme, setTheme] = useState([]);
@@ -53,7 +54,9 @@ const Materials = ({ setUserId, userId }) => {
         </motion.div>
         <div className={styles.editor}>
           <div></div>
-          <div></div>
+          <div>
+            <AddButton >Заголовок</AddButton>
+          </div>
         </div>
       </div>
     </div>
