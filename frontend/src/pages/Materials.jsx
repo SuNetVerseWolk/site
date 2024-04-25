@@ -25,7 +25,7 @@ const Materials = ({ setUserId, userId }) => {
     {
       src: '/delete.png',
       onClick: e => {
-        setTheme(prev => prev.filter(item => item.id !== +id))
+        deleteItemAPI.mutate(+id)
       }
     }
   ], [themes]);
@@ -47,6 +47,13 @@ const Materials = ({ setUserId, userId }) => {
   const setItemAPI = useMutation({
     mutationFn: data => axios.post('/api/teachersMaterials/' + data.id, data.theme),
     onSuccess: res => {},
+    onError: res => {}
+  })
+  const deleteItemAPI = useMutation({
+    mutationFn: data => axios.delete('/api/teachersMaterials/' + data),
+    onSuccess: res => {
+      setTheme(prev => prev.filter(item => item.id !== +id));
+    },
     onError: res => {}
   })
 
