@@ -99,7 +99,7 @@ const Materials = ({ setUserId, userId }) => {
         <motion.div className={styles.asideBar}>
           {
             values.isLoading ? (
-              <>Loading...</>
+              <div>Loading...</div>
             ) : (
               themes.map((item) => (
                 <Item key={item.id} index={item.id} saveChanges={saveItem} setIsEditable={setIsEditable}>{item.value}</Item>
