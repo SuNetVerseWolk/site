@@ -94,7 +94,8 @@
             color: #000;
         }
     
-        &:hover, a.active {
+        &:hover:not(.warn),
+        a.active {
             box-shadow: #4292dc69 0 2px 10px;
             cursor: pointer;
             
@@ -194,6 +195,12 @@
             filter: brightness(0) invert(1);
         }
     }
+}
+
+.warn {
+    background: #dae1ea;
+    /* scale: 0;
+    animation: appear .3s forwards; */
 }
 
 @keyframes appear {

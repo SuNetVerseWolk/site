@@ -84,7 +84,6 @@ const Materials = ({ setUserId, userId }) => {
   }
 
   useEffect(e => {
-    console.log(values.data)
     setTheme(values.data || []);
   }, [values.data]);
 
@@ -104,11 +103,15 @@ const Materials = ({ setUserId, userId }) => {
         <motion.div className={styles.asideBar}>
           {
             values.isLoading ? (
-              <div>Loading...</div>
+              <div className={styles.warn}>Загрузка...</div>
             ) : (
-              themes.map((item) => (
-                <Item key={item.id} index={item.id} saveChanges={saveItem} setIsEditable={setIsEditable}>{item.value}</Item>
-              ))
+              themes.length ? (
+                themes.map((item) => (
+                  <Item key={item.id} index={item.id} saveChanges={saveItem} setIsEditable={setIsEditable}>{item.value}</Item>
+                ))
+              ) : (
+                <motion.div whileInView={{ scale: 1 }} initial={{ scale: .9 }} className={styles.warn}>Пусто</motion.div>
+              )
             )
           }
 
