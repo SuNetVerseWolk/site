@@ -24,8 +24,11 @@ const Materials = ({ setUserId, userId }) => {
     },
     {
       src: '/delete.png',
+      onClick: e => {
+        setTheme(prev => prev.filter(item => item.id !== +id))
+      }
     }
-  ], []);
+  ], [themes]);
 
   const userData = useQuery({
     queryKey: [userId],
@@ -33,12 +36,7 @@ const Materials = ({ setUserId, userId }) => {
   })
   const values = useQuery({
     queryKey: ['teachersMaterials'],
-    queryFn: e => axios.get(`/api/teachersMaterials`).then(data => {
-      // setTheme(data.data);
-      // console.log(data.data)
-
-      return data.data;
-    }),
+    queryFn: e => axios.get(`/api/teachersMaterials`).then(data => data.data),
   })
 
   const addItemAPI = useMutation({
@@ -114,7 +112,7 @@ const Materials = ({ setUserId, userId }) => {
           
           <div className={styles.addElementsContainer}>
             {
-              buttonSrcs.map((button) => <AddButton key={button.src} img={button.src}>{button.text}</AddButton>)
+              buttonSrcs.map((button) => <AddButton {...button}>{button.text}</AddButton>)
             }
           </div>
         </div>
