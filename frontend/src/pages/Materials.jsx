@@ -26,18 +26,6 @@ const Materials = ({ setUserId, userId }) => {
       src: '/delete.png',
     }
   ], []);
-  
-  const saveItem = (e) => {
-    console.log(e.target.textContent);
-
-    setTheme(prev => {
-      prev.find(theme => theme.id === +id).value = e.target.textContent;
-
-      return [...prev];
-    });
-  }
-
-  console.log(themes);
 
   const userData = useQuery({
     queryKey: [userId],
@@ -52,8 +40,13 @@ const Materials = ({ setUserId, userId }) => {
     }),
   })
 
-  const { mutate } = useMutation({
+  const addItemAPI = useMutation({
     mutationFn: data => axios.post('/api/teachersMaterials', data),
+    onSuccess: res => {},
+    onError: res => {}
+  })
+  const setItemAPI = useMutation({
+    mutationFn: data => axios.post('/api/teachersMaterials/' + data.id, data.theme),
     onSuccess: res => {},
     onError: res => {}
   })
@@ -63,13 +56,25 @@ const Materials = ({ setUserId, userId }) => {
 
     setTheme(prevTheme => [...prevTheme, newItem]);
 
-    mutate(newItem);
+    addItemAPI.mutate(newItem);
   }
 
   const exit = () => {
     setUserId('');
 
     localStorage.setItem('id', '');
+  }
+
+  const saveItem = (e) => {
+    setTheme(prev => {
+      const theme = prev.find(theme => theme.id === +id);
+
+      theme.value = e.target.textContent;
+      console.log(theme)
+      setItemAPI.mutate({id, theme})
+
+      return [...prev];
+    });
   }
 
   return (

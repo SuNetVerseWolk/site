@@ -27,17 +27,14 @@ const defaultUserData = {
 Object.keys(dataPaths).forEach(dataPath => {
 	app.get(`/${dataPath}`, (req, res) => {
 		const
-		// filter = req.query?.filter,
 		data = getData(dataPath);
-
-		console.log(data)
-
+		
 		res.json(data)
 	});
 
 	app.post(`/${dataPath}`, (req, res) => {
 		const
-		newItem = getNewItem(req, res),
+		newItem = req.body,
 		data = getData(dataPath);
 
 		if (newItem) {
@@ -81,8 +78,6 @@ app.get('/teacher/:id', (req, res) => {
 	person = people.find(p => p.id === +req.params.id),
 	{name} = person;
 
-	console.log(req.params.id)
-	console.log(name)
 	if (person) return res.json({name})
 
 	res.status(404).json(false);
@@ -91,13 +86,13 @@ app.get('/teacher/:id', (req, res) => {
 
 app.post('/teachersMaterials/:id', (req, res) => {
 	const
-	patterns = getData(dataPaths.teachersMaterials),
-	pattern = patterns.find(pattern => pattern.id === +req.params.id);
+	teachersMaterials = getData(dataPaths.teachersMaterials),
+	teachersMaterialIndex = teachersMaterials.findIndex(teachersMaterial => teachersMaterial.id === +req.params.id);
 
-	if (!pattern) return res.status(404).json(false);
-	pattern.cards = req.body;
-
-	setData(dataPaths.teachersMaterials, patterns);
+	if (teachersMaterialIndex < 0) return res.status(404).json(false);
+	teachersMaterials[teachersMaterialIndex] = req.body;
+	
+	setData(dataPaths.teachersMaterials, teachersMaterials);
 	res.json(true);
 })
 
