@@ -7,6 +7,7 @@ import Item from '../components/Item'
 import AddButton from 'components/AddButton'
 import { useParams } from 'react-router-dom'
 import TextEditor from 'components/TextEditor'
+import { useMutation } from '@tanstack/react-query'
 
 const Materials = ({ setUserId, userId }) => {
   const [themes, setTheme] = useState([]);
@@ -25,6 +26,18 @@ const Materials = ({ setUserId, userId }) => {
       src: '/delete.png',
     }
   ], []);
+  
+  const saveItem = (e) => {
+    console.log(e.target.textContent);
+
+    setTheme(prev => {
+      prev.find(theme => theme.id === +id).value = e.target.textContent;
+
+      return [...prev];
+    });
+  }
+
+  console.log(themes);
 
   const userData = useQuery({
     queryKey: [userId],
@@ -34,8 +47,15 @@ const Materials = ({ setUserId, userId }) => {
     queryKey: [id],
     queryFn: e => axios.get(`/api/teachersMaterials`).then(data => {
       setTheme(data.data);
+
       return data.data;
     }),
+  })
+
+  const { mutate } = useMutation({
+    mutationFn: data => axios.post('/api/teachersMaterials', data),
+    onSuccess: res => {},
+    onError: res => {}
   })
 
   const add = () => {
@@ -43,7 +63,7 @@ const Materials = ({ setUserId, userId }) => {
 
     setTheme(prevTheme => [...prevTheme, newItem]);
 
-    console.log(newItem.id);
+    mutate(newItem);
   }
 
   const exit = () => {
@@ -51,8 +71,6 @@ const Materials = ({ setUserId, userId }) => {
 
     localStorage.setItem('id', '');
   }
-
-  console.log(isEditable);
 
   return (
     <div className={styles.presContainer}>
@@ -70,7 +88,7 @@ const Materials = ({ setUserId, userId }) => {
         <motion.div className={styles.asideBar}>
           {
             themes.map((item) => (
-              <Item key={item.id} index={item.id} setIsEditable={setIsEditable}>{item.value}</Item>
+              <Item key={item.id} index={item.id} saveChanges={saveItem} setIsEditable={setIsEditable}>{item.value}</Item>
             ))
           }
 
@@ -78,17 +96,7 @@ const Materials = ({ setUserId, userId }) => {
         </motion.div>
         <div className={styles.editor}>
           <TextEditor className={styles.textEditor} />
-          {/* <div className={styles.main}>
-            <h1 contentEditable onBlur={e => setTheme(prev => {
-              console.log(prev);
-              console.log(prev.find(item => item.id === id));
-              prev.find(item => item.id === +id).value = e.target.textContent;
-
-              // setCursorPosition(e.target);
-
-              return [...prev];
-            })}>{themes.find(item => item.id === +id)?.value}</h1>
-          </div> */}
+          
           <div className={styles.addElementsContainer}>
             {
               buttonSrcs.map((button) => <AddButton key={button.src} img={button.src}>{button.text}</AddButton>)
