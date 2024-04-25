@@ -6,17 +6,7 @@ import axios from 'axios'
 import Item from '../components/Item'
 import AddButton from 'components/AddButton'
 import { useParams } from 'react-router-dom'
-
-const setCursorPosition = (el) => {
-  const range = document.createRange();
-  const sel = window.getSelection();
-
-  range.setStart(el.childNodes[0], 5);
-  range.collapse(true);
-
-  sel.removeAllRanges();
-  sel.addRange(range);
-}
+import TextEditor from 'components/TextEditor'
 
 const Materials = ({ setUserId, userId }) => {
   const [themes, setTheme] = useState([]);
@@ -74,7 +64,8 @@ const Materials = ({ setUserId, userId }) => {
           <motion.button whileTap={{ scale: .9 }} onClick={add}>+</motion.button>
         </motion.div>
         <div className={styles.editor}>
-          <div className={styles.main}>
+          <TextEditor className={styles.textEditor} />
+          {/* <div className={styles.main}>
             <h1 contentEditable onBlur={e => setTheme(prev => {
               console.log(prev);
               console.log(prev.find(item => item.id === id));
@@ -84,7 +75,7 @@ const Materials = ({ setUserId, userId }) => {
 
               return [...prev];
             })}>{themes.find(item => item.id === +id)?.value}</h1>
-          </div>
+          </div> */}
           <div className={styles.addElementsContainer}>
             <AddButton />
           </div>
