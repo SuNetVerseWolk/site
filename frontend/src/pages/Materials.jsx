@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import styles from 'styles/presStyle.module.css'
 import { motion } from 'framer-motion'
 import { useQuery } from '@tanstack/react-query'
@@ -11,7 +11,20 @@ import TextEditor from 'components/TextEditor'
 const Materials = ({ setUserId, userId }) => {
   const [themes, setTheme] = useState([]);
   const { id } = useParams();
-  const [isEditable, setIsEditable] = useState(false)
+  const [isEditable, setIsEditable] = useState(false);
+  const buttonSrcs = useMemo(e => [
+    {
+      src: '/heading.png',
+      text: 'Заголовок'
+    },
+    {
+      src: '/text.png',
+      text: 'Текст'
+    },
+    {
+      src: '/delete.png',
+    }
+  ], []);
 
   const userData = useQuery({
     queryKey: [userId],
@@ -77,7 +90,9 @@ const Materials = ({ setUserId, userId }) => {
             })}>{themes.find(item => item.id === +id)?.value}</h1>
           </div> */}
           <div className={styles.addElementsContainer}>
-            <AddButton />
+            {
+              buttonSrcs.map((button) => <AddButton key={button.src} img={button.src}>{button.text}</AddButton>)
+            }
           </div>
         </div>
       </div>

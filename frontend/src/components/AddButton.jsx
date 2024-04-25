@@ -1,18 +1,12 @@
 import React from 'react'
+import { motion } from 'framer-motion'
 
-const AddButton = ({ children }) => {
+const AddButton = ({ children, img }) => {
+  console.log(children);
   return (
-    <>
-      <button>
-        <img src="/heading.png" alt="..." />
-      </button>
-      <button>
-        <img src="/text.png" alt="..." />
-      </button>
-      <button disabled>
-        <img src="/delete.png" alt="..." />
-      </button>
-    </>
+      <motion.button whileTap={{ scale: .9 }} style={{'--text': `'${children ? children : ''}'`}}>
+        <img src={img} alt="..." />
+      </motion.button>
   )
 }
 

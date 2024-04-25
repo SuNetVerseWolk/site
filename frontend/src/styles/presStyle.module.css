@@ -78,7 +78,8 @@
         min-height: 60px;
         border-radius: 15px;
         box-shadow: #2e2e2e36 0 2px 10px;
-        padding: 10px;
+        padding: 20px 10px;
+        text-align: center;
 
         transition: all .2s ease-out;
 
@@ -179,34 +180,6 @@
 
     padding: 20px;
 
-    button:not(:last-child) {
-        background: #6dabe4;
-
-        &:hover {
-            background: #4292dc;
-        }
-    }
-
-    button:nth-child(1) {
-        &:hover {
-            &::after {
-                content: 'Заголовок';
-
-                animation: appear .3s forwards;
-            }
-        }
-    }
-
-    button:nth-child(2) {
-        &:hover {
-            &::after {
-                content: 'Текст';
-
-                animation: appear .3s forwards;
-            }
-        }
-    }
-
     button:last-child {
         background: #e46d6d;
 
@@ -224,16 +197,23 @@
         border: none;
         border-radius: 100%;
         aspect-ratio: 1;
+        background: #6dabe4;
 
-        &:not(:last-child):after {
-            position: absolute;
-            top: 30%;
-            left: 110%;
-            scale: 0;
+        &:hover {
+            background: #4292dc;
 
-            color: #6dabe4;
-
-            font-size: 15px;
+            &::after {
+                content: var(--text);
+                position: absolute;
+                top: 30%;
+                left: 110%;
+                scale: 0;
+    
+                color: #6dabe4;
+    
+                font-size: 15px;
+                animation: appear .3s forwards;
+            }
         }
 
         img {
