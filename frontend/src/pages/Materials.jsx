@@ -32,7 +32,7 @@ const Materials = ({ setUserId, userId }) => {
     queryFn: e => axios.get(`/api/teacher/${userId}`).then(data => data.data)
   })
   const values = useQuery({
-    queryKey: ['teachersMaterials', id],
+    queryKey: ['teachersMaterials'],
     queryFn: e => axios.get(`/api/teachersMaterials`).then(data => {
       // setTheme(data.data);
       // console.log(data.data)
