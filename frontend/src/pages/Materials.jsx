@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import styles from 'styles/presStyle.module.css'
 import { motion } from 'framer-motion'
 import { useQuery } from '@tanstack/react-query'
@@ -32,9 +32,10 @@ const Materials = ({ setUserId, userId }) => {
     queryFn: e => axios.get(`/api/teacher/${userId}`).then(data => data.data)
   })
   const values = useQuery({
-    queryKey: [id],
+    queryKey: ['teachersMaterials', id],
     queryFn: e => axios.get(`/api/teachersMaterials`).then(data => {
-      setTheme(data.data);
+      // setTheme(data.data);
+      // console.log(data.data)
 
       return data.data;
     }),
@@ -77,6 +78,11 @@ const Materials = ({ setUserId, userId }) => {
     });
   }
 
+  useEffect(e => {
+    console.log(values.data)
+    setTheme(values.data || []);
+  }, [values.data]);
+
   return (
     <div className={styles.presContainer}>
       <header>
@@ -92,9 +98,13 @@ const Materials = ({ setUserId, userId }) => {
       <div>
         <motion.div className={styles.asideBar}>
           {
-            themes.map((item) => (
-              <Item key={item.id} index={item.id} saveChanges={saveItem} setIsEditable={setIsEditable}>{item.value}</Item>
-            ))
+            values.isLoading ? (
+              <>Loading...</>
+            ) : (
+              themes.map((item) => (
+                <Item key={item.id} index={item.id} saveChanges={saveItem} setIsEditable={setIsEditable}>{item.value}</Item>
+              ))
+            )
           }
 
           <motion.button whileTap={{ scale: .9 }} onClick={add}>+</motion.button>
