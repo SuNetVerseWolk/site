@@ -1,8 +1,8 @@
 import React from 'react'
 
-const TextEditor = ({ className }) => {
+const TextEditor = ({ ref, className }) => {
   return (
-    <div className={className} contentEditable>
+    <div ref={ref} className={className} contentEditable>
       
     </div>
   )

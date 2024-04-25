@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { motion } from 'framer-motion'
 import { NavLink } from 'react-router-dom';
 
-const Item = ({ index, children, setIsEditable, saveChanges }) => {
+const Item = ({ index, children, isEditable, setIsEditable, saveChanges }) => {
   const linkRef = useRef();
 
   return (
@@ -11,7 +11,7 @@ const Item = ({ index, children, setIsEditable, saveChanges }) => {
 
         linkRef.current.click();
       }}>
-      <NavLink to={`${index}`} ref={linkRef} contentEditable>{children}</NavLink>
+      <NavLink to={`${index}`} ref={linkRef} contentEditable={isEditable}>{children}</NavLink>
     </motion.div>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styles from 'styles/presStyle.module.css'
 import { motion } from 'framer-motion'
 import { useQuery } from '@tanstack/react-query'
@@ -13,10 +13,14 @@ const Materials = ({ setUserId, userId }) => {
   const [themes, setTheme] = useState([]);
   const { id } = useParams();
   const [isEditable, setIsEditable] = useState(false);
+  const textEditorRef = useRef();
   const buttonSrcs = useMemo(e => [
     {
       src: '/heading.png',
-      text: 'Заголовок'
+      text: 'Заголовок',
+      onClick: e => {
+        document.execCommand('fontSize', false, '20px')
+      }
     },
     {
       src: '/text.png',
@@ -72,6 +76,7 @@ const Materials = ({ setUserId, userId }) => {
   }
 
   const saveItem = (e) => {
+    setIsEditable(false);
     setTheme(prev => {
       const theme = prev.find(theme => theme.id === +id);
 
@@ -107,7 +112,7 @@ const Materials = ({ setUserId, userId }) => {
             ) : (
               themes.length ? (
                 themes.map((item) => (
-                  <Item key={item.id} index={item.id} saveChanges={saveItem} setIsEditable={setIsEditable}>{item.value}</Item>
+                  <Item key={item.id} index={item.id} saveChanges={saveItem} isEditable={isEditable} setIsEditable={setIsEditable}>{item.value}</Item>
                 ))
               ) : (
                 <motion.div whileInView={{ scale: 1 }} initial={{ scale: .9 }} className={styles.warn}>Пусто</motion.div>
@@ -118,7 +123,7 @@ const Materials = ({ setUserId, userId }) => {
           <motion.button whileTap={{ scale: .9 }} onClick={add}>+</motion.button>
         </motion.div>
         <div className={styles.editor}>
-          <TextEditor className={styles.textEditor} />
+          <TextEditor ref={textEditorRef} className={styles.textEditor} />
           
           <div className={styles.addElementsContainer}>
             {
