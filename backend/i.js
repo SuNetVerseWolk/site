@@ -47,16 +47,11 @@ Object.keys(dataPaths).forEach(dataPath => {
 	});
 
 	app.delete(`/${dataPath}/:id`, (req, res) => {
-		const
-		itemId = +req.params.id,
-		data = getData(dataPath);
+		const itemId = +req.params.id;
+		let data = getData(dataPath);
 
-		for (var i = 0; i < data.length; i++) {
-			if (itemId === data[i].id) {
-				data.splice(i, 1);
-				break;
-			}
-		}
+		if (data.findIndex(item => item.id === itemId) < 0) return res.json(false)
+		data = data.filter(item => item.id != itemId)
 
 		setData(dataPath, data);
 		res.json(true);
