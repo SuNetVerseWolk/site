@@ -14,17 +14,36 @@ const Materials = ({ setUserId, userId }) => {
   const { id } = useParams();
   const [isEditable, setIsEditable] = useState(false);
   const textEditorRef = useRef();
+  const [activeIndex, setActiveIndex] = useState(0);
+
   const buttonSrcs = useMemo(e => [
     {
       src: '/heading.png',
       text: 'Заголовок',
       onClick: e => {
-        document.execCommand('fontSize', false, '20px')
+        document.execCommand('formatBlock', false, 'h1')
       }
     },
     {
       src: '/text.png',
-      text: 'Текст'
+      text: 'Текст',
+      onClick: e => {
+        document.execCommand('formatBlock', false, 'p')
+      }
+    },
+    {
+      src: '/cursive.png',
+      text: 'Курсив',
+      onClick: e => {
+        document.execCommand('Italic', false, 'p')
+      }
+    },
+    {
+      src: '/underline.png',
+      text: 'Подчеркивание',
+      onClick: e => {
+        document.execCommand('underline')
+      }
     },
     {
       src: '/delete.png',
@@ -33,6 +52,11 @@ const Materials = ({ setUserId, userId }) => {
       }
     }
   ], [themes]);
+
+
+  useEffect(() => {
+    setActiveIndex(0);
+  }, []);
 
   const userData = useQuery({
     queryKey: [userId],
@@ -126,6 +150,33 @@ const Materials = ({ setUserId, userId }) => {
           <TextEditor ref={textEditorRef} className={styles.textEditor} />
           
           <div className={styles.addElementsContainer}>
+            <div className={styles.textEditorCoontainer}>
+              <label htmlFor="size">
+                Размер:
+                <input name='size' type="number" />
+              </label>
+              <label htmlFor="colorText">
+                Цвет текста:
+                <input name='colorText' type="color" />
+              </label>
+              <label htmlFor="colorBackground">
+                Цвет фона:
+                <input name='colorBackground' type="color" />
+              </label>
+            </div>
+
+            <div className={styles.positionContainer}>
+              <button onClick={e => {
+                document.execCommand('JustifyLeft', false, null)
+              }}><img src="/left.png" alt="..." /></button>
+              <button onClick={e => {
+                document.execCommand('JustifyCenter', false, null)
+              }}><img src="/cursive.png" alt="..." /></button>
+              <button onClick={e => {
+                document.execCommand('JustifyRight', false, null)
+              }}><img src="/right.png" alt="..." /></button>
+            </div>
+
             {
               buttonSrcs.map((button) => <AddButton {...button}>{button.text}</AddButton>)
             }

@@ -90,6 +90,7 @@
             width: 100%;
             min-height: 30px;
             word-break: break-all;
+            text-decoration: none;
             font-size: 17px;
             color: #000;
         }
@@ -137,11 +138,22 @@
     grid-template-columns: 80% 20%;
 
     .textEditor {
+        overflow-y: scroll;
+        max-height: 87svh;
         padding: 20px;
         margin: 10px;
         border-radius: 10px;
         background: #fdfdfd;
         box-shadow: #2e2e2e36 0 5px 10px;
+
+        &::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        &::-webkit-scrollbar-thumb {
+            -webkit-border-radius: 20px;
+            background: #dae1ea;
+        }
     }
 }
 
@@ -153,7 +165,7 @@
 
     padding: 20px;
 
-    button:last-child {
+    button:not(.positionContainer > button:last-child):last-child {
         background: #e46d6d;
 
         &:hover {
@@ -171,6 +183,13 @@
         border-radius: 100%;
         aspect-ratio: 1;
         background: #6dabe4;
+
+        &:nth-child(4) {
+            img {
+                width: 17px;
+                height: 17px;
+            }
+        }
 
         &:hover {
             background: #4292dc;
@@ -199,8 +218,72 @@
 
 .warn {
     background: #dae1ea;
-    /* scale: 0;
-    animation: appear .3s forwards; */
+}
+
+.positionContainer {
+    button {
+        background: #ffeb99;
+        height: 40px;
+
+        &:nth-child(1) {
+            border-radius: 15px 0 0 15px;
+        }
+        &:nth-child(2) {
+            border-radius: 0;
+        }
+        &:nth-child(3) {
+            border-radius: 0 15px 15px 0;
+        }
+
+        img {
+            height: 15px;
+            width: 15px;
+            filter: invert(1);
+        }
+
+        /* &:hover {
+            img {
+                filter: brightness(0) invert(1);
+            }
+        } */
+    }
+}
+
+.textEditorCoontainer {
+    label {
+        display: flex;
+        align-items: center;
+
+        font-size: 12px;
+        margin: 5px;
+
+        input[type="number"] {
+            width: 70px;
+            border: #00000080 .5px solid;
+            border-radius: 20px;
+            padding: 3px 10px;  
+        }
+
+        input[type="color"] {
+            border: none;
+            width: 40px;
+            height: 32px;
+            background: none;
+
+            &::-webkit-color-swatch-wrapper {
+                padding: 0;
+            }
+            
+            &::-webkit-color-swatch {
+                border: none;
+                border-radius: 20px;
+            }
+        }
+
+        input {
+            margin-left: 10px;
+        }
+    }
 }
 
 @keyframes appear {
