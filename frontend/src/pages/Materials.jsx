@@ -149,7 +149,7 @@ const Materials = ({ setUserId, userId }) => {
 
   useEffect(e => {
     setTheme(prev => {
-      if (!id && values.data?.[0].id) {
+      if (!id && values.data?.[0]?.id) {
         console.log(id)
         navigator(`${values.data[0].id}`, {replace: true})
       }
