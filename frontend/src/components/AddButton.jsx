@@ -1,9 +1,9 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 
-const AddButton = ({ children, src, onClick }) => {
+const AddButton = ({ children, src, onClick, tapAnim = true }) => {
   return (
-    <motion.button whileTap={{ scale: .9 }} onClick={onClick} style={{'--text': `'${children ? children : ''}'`}}>
+    <motion.button whileTap={tapAnim ? { scale: .9 } : {}} onClick={onClick} style={{'--text': `'${children ? children : ''}'`}}>
       <img src={src} alt="..." />
     </motion.button>
   )

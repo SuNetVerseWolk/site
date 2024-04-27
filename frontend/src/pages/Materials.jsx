@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import Item from '../components/Item'
 import AddButton from 'components/AddButton'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import TextEditor from 'components/TextEditor'
 import { useMutation } from '@tanstack/react-query'
 
@@ -14,8 +14,48 @@ const Materials = ({ setUserId, userId }) => {
   const { id } = useParams();
   const [isEditable, setIsEditable] = useState(false);
   const textEditorRef = useRef();
-  const [activeIndex, setActiveIndex] = useState(0);
+  const navigator = useNavigate()
 
+  const [inputsData, setInputsData] = useState({
+    foreColor: '#000000',
+    hiliteColor: '#ffffff'
+  })
+  const inputs = useMemo(e => [
+    {
+      type: 'text',
+      name: 'fontSize',
+      text: 'Размер текста',
+      id: 'textSize'
+    },
+    {
+      type: 'color',
+      name: 'foreColor',
+      text: 'Цвет текста',
+      id: 'textColor'
+    },
+    {
+      type: 'color',
+      name: 'hiliteColor',
+      text: 'Фон текста',
+      id: 'textBackColor'
+    }
+  ], [])
+  const positionBtns = useMemo(e => [
+    {
+      src: '/left.png',
+      text: 'Лево',
+      onClick: e => document.execCommand('JustifyLeft')
+    },{
+      src: '/cursive.png',
+      text: 'Центр',
+      onClick: e => document.execCommand('JustifyCenter')
+    },
+    {
+      src: '/right.png',
+      text: 'Право',
+      onClick: e => document.execCommand('JustifyRight')
+    },
+  ], [])
   const buttonSrcs = useMemo(e => [
     {
       src: '/heading.png',
@@ -35,7 +75,7 @@ const Materials = ({ setUserId, userId }) => {
       src: '/cursive.png',
       text: 'Курсив',
       onClick: e => {
-        document.execCommand('Italic', false, 'p')
+        document.execCommand('Italic')
       }
     },
     {
@@ -51,12 +91,7 @@ const Materials = ({ setUserId, userId }) => {
         deleteItemAPI.mutate(+id)
       }
     }
-  ], [themes]);
-
-
-  useEffect(() => {
-    setActiveIndex(0);
-  }, []);
+  ], []);
 
   const userData = useQuery({
     queryKey: [userId],
@@ -113,7 +148,14 @@ const Materials = ({ setUserId, userId }) => {
   }
 
   useEffect(e => {
-    setTheme(values.data || []);
+    setTheme(prev => {
+      if (!id && values.data?.[0].id) {
+        console.log(id)
+        navigator(`${values.data[0].id}`, {replace: true})
+      }
+
+      return values.data || []
+    });
   }, [values.data]);
 
   return (
@@ -147,34 +189,47 @@ const Materials = ({ setUserId, userId }) => {
           <motion.button whileTap={{ scale: .9 }} onClick={add}>+</motion.button>
         </motion.div>
         <div className={styles.editor}>
-          <TextEditor ref={textEditorRef} className={styles.textEditor} />
+          <TextEditor ref={textEditorRef} className={styles.textEditor} setInputsData={setInputsData} />
           
           <div className={styles.addElementsContainer}>
             <div className={styles.textEditorCoontainer}>
-              <label htmlFor="size">
-                Размер:
-                <input name='size' type="number" />
-              </label>
-              <label htmlFor="colorText">
-                Цвет текста:
-                <input name='colorText' type="color" />
-              </label>
-              <label htmlFor="colorBackground">
-                Цвет фона:
-                <input name='colorBackground' type="color" />
-              </label>
+              {
+                inputs.map((input, i) => {
+                  console.log(inputsData[input.name])
+                  return (
+                  <div key={i}>
+                    <input
+                      onInput={e => {
+                        Object.keys(inputsData).forEach(value => {
+                          document.execCommand(value, false, inputsData[value])
+                        })
+                      }}
+                      onChange={e => {
+                        setInputsData(prev => {
+                          prev[input.name] = e.target.value
+
+                          return {...prev}
+                        })
+                      }}
+
+                      {...input}
+
+                      value={inputsData[input.name]}
+                      max={72}
+                      // value={input.value[0] === '#' ? input.value : parseInt(input.value)}
+                    />
+                    <label htmlFor={input.id}>
+                      {input.text}
+                    </label>
+                  </div>
+                )})
+              }
             </div>
 
             <div className={styles.positionContainer}>
-              <button onClick={e => {
-                document.execCommand('JustifyLeft', false, null)
-              }}><img src="/left.png" alt="..." /></button>
-              <button onClick={e => {
-                document.execCommand('JustifyCenter', false, null)
-              }}><img src="/cursive.png" alt="..." /></button>
-              <button onClick={e => {
-                document.execCommand('JustifyRight', false, null)
-              }}><img src="/right.png" alt="..." /></button>
+              {
+                positionBtns.map((button) => <AddButton {...button} tapAnim={false}>{button.text}</AddButton>)
+              }
             </div>
 
             {
