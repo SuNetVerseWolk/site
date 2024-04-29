@@ -77,6 +77,16 @@ app.get('/teacher/:id', (req, res) => {
 
 	res.status(404).json(false);
 })
+app.get('/student/:id', (req, res) => {
+	const
+	people = getData(dataPaths.students),
+	person = people.find(p => p.id === +req.params.id),
+	{name} = person;
+
+	if (person) return res.json({name})
+
+	res.status(404).json(false);
+})
 
 
 app.post('/teachersMaterials/:id', (req, res) => {
@@ -95,13 +105,16 @@ app.post('/logIn', (req, res) => {
 	const
 	teachers = getData(dataPaths.teachers),
 	students = getData(dataPaths.students),
-	person = teachers.find(teacher => teacher.name === req.body.name) || students.find(student => student.name === req.body.name);
+	teacher = teachers.find(teacher => teacher.name === req.body.name)
+	person = teacher ? { ...teacher, type: 'teacher' } : { ...students.find(student => student.name === req.body.name), type: 'student' };
 
     if (person) {
-        const { id, password } = person;
+        const { id, password, type } = person;
+
+		console.log(person);
 
         if (password === req.body.password)
-            return res.json({ id });
+            return res.json({ id, type });
 
         res.status(403).json(false);
     }

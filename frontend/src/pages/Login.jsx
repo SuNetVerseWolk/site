@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 import styles from 'styles/formStyle.module.css'
 import { motion } from 'framer-motion'
 
-const Login = ({ setUserId }) => {
+const Login = ({ setUserInfo }) => {
   const [isWarned, setIsWarned] = useState(true);
   const [warn, animateWarn] = useAnimate();
   const [warnText, setWarnText] = useState();
@@ -26,8 +26,8 @@ const Login = ({ setUserId }) => {
   const { mutate } = useMutation({
     mutationFn: data => axios.post('/api/logIn', data),
     onSuccess: res => {
-      setUserId(res.data.id);
-      localStorage.setItem('id', res.data.id);
+      setUserInfo(res.data);
+      localStorage.setItem('info', JSON.stringify(res.data));
     },
     onError: res => {
       switch (res.response.status) {

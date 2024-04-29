@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styles from 'styles/presStyle.module.css'
-import { motion } from 'framer-motion'
+import { calcLength, motion } from 'framer-motion'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import Item from '../components/Item'
@@ -9,12 +9,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import TextEditor from 'components/TextEditor'
 import { useMutation } from '@tanstack/react-query'
 
-const Materials = ({ setUserId, userId }) => {
+const Materials = ({ setUserInfo, userInfo }) => {
   const [themes, setTheme] = useState([]);
   const { id } = useParams();
   const [isEditable, setIsEditable] = useState(false);
   const textEditorRef = useRef();
   const navigator = useNavigate()
+
+  const isTeacher = useMemo(e => userInfo.type === 'teacher', [userInfo]);
 
   const [inputsData, setInputsData] = useState({
     foreColor: '#000000',
@@ -94,12 +96,12 @@ const Materials = ({ setUserId, userId }) => {
   ], []);
 
   const userData = useQuery({
-    queryKey: [userId],
-    queryFn: e => axios.get(`/api/teacher/${userId}`).then(data => data.data)
+    queryKey: [userInfo.id],
+    queryFn: e => axios.get(`/api/${userInfo.type}/${userInfo.id}`).then(data => data.data)
   })
   const values = useQuery({
-    queryKey: ['teachersMaterials'],
-    queryFn: e => axios.get(`/api/teachersMaterials`).then(data => data.data),
+    queryKey: [isTeacher ? 'teachersMaterials' : 'teachers'],
+    queryFn: e => axios.get(`/api/${isTeacher ? 'teachersMaterials' : 'teachers'}`).then(data => data.data),
   })
 
   const addItemAPI = useMutation({
@@ -129,9 +131,9 @@ const Materials = ({ setUserId, userId }) => {
   }
 
   const exit = () => {
-    setUserId('');
+    setUserInfo('');
 
-    localStorage.setItem('id', '');
+    localStorage.setItem('Info', '');
   }
 
   const saveItem = (e) => {
@@ -158,6 +160,7 @@ const Materials = ({ setUserId, userId }) => {
     });
   }, [values.data]);
 
+  console.log(userData.data);
   return (
     <div className={styles.presContainer}>
       <header>
@@ -178,7 +181,7 @@ const Materials = ({ setUserId, userId }) => {
             ) : (
               themes.length ? (
                 themes.map((item) => (
-                  <Item key={item.id} index={item.id} saveChanges={saveItem} isEditable={isEditable} setIsEditable={setIsEditable}>{item.value}</Item>
+                  <Item key={item.id} index={item.id} saveChanges={saveItem} isEditable={isEditable} setIsEditable={setIsEditable} mayEdite={isTeacher ? true : false}>{isTeacher ? item.value : item.name}</Item>
                 ))
               ) : (
                 <motion.div whileInView={{ scale: 1 }} initial={{ scale: .9 }} className={styles.warn}>Пусто</motion.div>
@@ -186,55 +189,61 @@ const Materials = ({ setUserId, userId }) => {
             )
           }
 
-          <motion.button whileTap={{ scale: .9 }} onClick={add}>+</motion.button>
+          {isTeacher && (
+            <motion.button whileTap={{ scale: .9 }} onClick={add}>+</motion.button>
+          )}
         </motion.div>
         <div className={styles.editor}>
           <TextEditor ref={textEditorRef} className={styles.textEditor} setInputsData={setInputsData} />
           
           <div className={styles.addElementsContainer}>
-            <div className={styles.textEditorCoontainer}>
-              {
-                inputs.map((input, i) => {
-                  console.log(inputsData[input.name])
-                  return (
-                  <div key={i}>
-                    <input
-                      onInput={e => {
-                        Object.keys(inputsData).forEach(value => {
-                          document.execCommand(value, false, inputsData[value])
-                        })
-                      }}
-                      onChange={e => {
-                        setInputsData(prev => {
-                          prev[input.name] = e.target.value
+            {isTeacher && (
+              <>
+                <div className={styles.textEditorCoontainer}>
+                  {
+                    inputs.map((input, i) => {
+                      console.log(inputsData[input.name])
+                      return (
+                      <div key={i}>
+                        <input
+                          onInput={e => {
+                            Object.keys(inputsData).forEach(value => {
+                              document.execCommand(value, false, inputsData[value])
+                            })
+                          }}
+                          onChange={e => {
+                            setInputsData(prev => {
+                              prev[input.name] = e.target.value
 
-                          return {...prev}
-                        })
-                      }}
+                              return {...prev}
+                            })
+                          }}
 
-                      {...input}
+                          {...input}
 
-                      value={inputsData[input.name]}
-                      max={72}
-                      // value={input.value[0] === '#' ? input.value : parseInt(input.value)}
-                    />
-                    <label htmlFor={input.id}>
-                      {input.text}
-                    </label>
-                  </div>
-                )})
-              }
-            </div>
+                          value={inputsData[input.name]}
+                          max={72}
+                          // value={input.value[0] === '#' ? input.value : parseInt(input.value)}
+                        />
+                        <label htmlFor={input.id}>
+                          {input.text}
+                        </label>
+                      </div>
+                    )})
+                  }
+                </div>
 
-            <div className={styles.positionContainer}>
-              {
-                positionBtns.map((button) => <AddButton {...button} tapAnim={false}>{button.text}</AddButton>)
-              }
-            </div>
+                <div className={styles.positionContainer}>
+                  {
+                    positionBtns.map((button) => <AddButton {...button} tapAnim={false}>{button.text}</AddButton>)
+                  }
+                </div>
 
-            {
-              buttonSrcs.map((button) => <AddButton {...button}>{button.text}</AddButton>)
-            }
+                {
+                  buttonSrcs.map((button) => <AddButton {...button}>{button.text}</AddButton>)
+                }
+              </>
+            )}
           </div>
         </div>
       </div>
