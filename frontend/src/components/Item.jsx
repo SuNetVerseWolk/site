@@ -9,6 +9,7 @@ const Item = ({ index, children, isEditable, setIsEditable, saveChanges, mayEdit
     <motion.div whileInView={{ scale: 1 }} initial={{ scale: .9 }} id='activeItem' onBlur={saveChanges} onClick={e => {
         if (mayEdite) setIsEditable(true);
 
+        linkRef.current.focus();
         linkRef.current.click();
       }}>
       <NavLink to={`${index}`} ref={linkRef} contentEditable={isEditable}>{children}</NavLink>

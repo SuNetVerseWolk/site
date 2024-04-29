@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styles from 'styles/presStyle.module.css'
 import { motion } from 'framer-motion'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import Item from '../components/Item'
 import AddButton from 'components/AddButton'
@@ -10,6 +10,7 @@ import TextEditor from 'components/TextEditor'
 import { useMutation } from '@tanstack/react-query'
 
 const Materials = ({ setUserInfo, userInfo }) => {
+  const queryClient = useQueryClient();
   const [themes, setTheme] = useState([]);
   const { id } = useParams();
   const [isEditable, setIsEditable] = useState(false);
@@ -45,7 +46,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
       src: '/left.png',
       text: 'Лево',
       onClick: e => document.execCommand('JustifyLeft')
-    },{
+    }, {
       src: '/cursive.png',
       text: 'Центр',
       onClick: e => document.execCommand('JustifyCenter')
@@ -87,46 +88,44 @@ const Materials = ({ setUserInfo, userInfo }) => {
     },
     {
       src: '/delete.png',
-      onClick: e => {
-        deleteItemAPI.mutate(+id)
-      }
+      onClick: e => deleteItemAPI()
     }
   ], []);
 
   const userData = useQuery({
-    queryKey: [userInfo.id],
+    queryKey: [userInfo.type, userInfo.id],
     queryFn: e => axios.get(`/api/${userInfo.type}/${userInfo.id}`).then(data => data.data)
   })
   const values = useQuery({
     queryKey: [isTeacher ? 'teachersMaterials' : 'teachers'],
     queryFn: e => axios.get(`/api/${isTeacher ? 'teachersMaterials' : 'teachers'}`).then(data => data.data),
+    staleTime: Infinity,
   })
 
-  const addItemAPI = useMutation({
-    mutationFn: data => axios.post('/api/teachersMaterials', data),
-    onSuccess: res => {},
-    onError: res => {}
+  const { mutate: addItemAPI } = useMutation({
+    mutationFn: data => axios.post('/api/teachersMaterials', { id: Date.now(), value: '' }),
+    onSuccess: res => {
+      queryClient.invalidateQueries(['teachersMaterials'])
+    },
+    onError: res => { }
   })
   const setItemAPI = useMutation({
     mutationFn: data => axios.post('/api/teachersMaterials/' + data.id, data.theme),
-    onSuccess: res => {},
-    onError: res => {}
-  })
-  const deleteItemAPI = useMutation({
-    mutationFn: data => axios.delete('/api/teachersMaterials/' + data),
     onSuccess: res => {
-      setTheme(prev => prev.filter(item => item.id !== +id));
+      queryClient.invalidateQueries(['teachersMaterials'])
     },
-    onError: res => {}
+    onError: res => { }
   })
-
-  const add = () => {
-    const newItem = { id: Date.now(), value: '' };
-
-    setTheme(prevTheme => [...prevTheme, newItem]);
-
-    addItemAPI.mutate(newItem);
-  }
+  const { mutate: deleteItemAPI } = useMutation({
+    mutationFn: data => {
+      console.log('/api/teachersMaterials/' + id)
+      axios.delete('/api/teachersMaterials/' + id).then(data => console.log(data))
+    },
+    onSuccess: res => {
+      queryClient.invalidateQueries(['teachersMaterials'])
+    },
+    onError: res => { }
+  })
 
   const exit = () => {
     setUserInfo('');
@@ -141,7 +140,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
 
       theme.value = e.target.textContent;
       console.log(theme)
-      setItemAPI.mutate({id, theme})
+      setItemAPI.mutate({ id, theme })
 
       return [...prev];
     });
@@ -151,14 +150,16 @@ const Materials = ({ setUserInfo, userInfo }) => {
     setTheme(prev => {
       if (!id && values.data?.[0]?.id) {
         console.log(id)
-        navigator(`${values.data[0].id}`, {replace: true})
+        navigator(`${values.data[0].id}`, { replace: true })
       }
 
       return values.data || []
     });
   }, [values.data]);
 
-  console.log(userData.data);
+  useEffect(e =>
+    console.log(id), [id])
+
   return (
     <div className={styles.presContainer}>
       <header>
@@ -188,12 +189,12 @@ const Materials = ({ setUserInfo, userInfo }) => {
           }
 
           {isTeacher && (
-            <motion.button whileTap={{ scale: .9 }} onClick={add}>+</motion.button>
+            <motion.button whileTap={{ scale: .9 }} onClick={addItemAPI}>+</motion.button>
           )}
         </motion.div>
         <div className={styles.editor}>
-          <TextEditor ref={textEditorRef} className={styles.textEditor}/>
-          
+          <TextEditor ref={textEditorRef} className={styles.textEditor} />
+
           <div className={styles.addElementsContainer}>
             {isTeacher && (
               <>
@@ -201,18 +202,19 @@ const Materials = ({ setUserInfo, userInfo }) => {
                   {
                     inputs.map((input, i) => {
                       return (
-                      <div key={i}>
-                        <input
-                          onInput={e => document.execCommand(input.name, false, e.target.value)}
-                          {...input}
-                          max={72}
+                        <div key={i}>
+                          <input
+                            onInput={e => document.execCommand(input.name, false, e.target.value)}
+                            {...input}
+                            max={72}
                           // value={input.value[0] === '#' ? input.value : parseInt(input.value)}
-                        />
-                        <label htmlFor={input.id}>
-                          {input.text}
-                        </label>
-                      </div>
-                    )})
+                          />
+                          <label htmlFor={input.id}>
+                            {input.text}
+                          </label>
+                        </div>
+                      )
+                    })
                   }
                 </div>
 
