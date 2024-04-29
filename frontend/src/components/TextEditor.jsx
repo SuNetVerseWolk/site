@@ -11,16 +11,9 @@ const RGB_HEX = rgb => {
   return '#' + eachNumber
 }
 
-const TextEditor = ({ ref, className, setInputsData }) => {
+const TextEditor = ({ ref, className }) => {
   return (
-    <div ref={ref} className={className} contentEditable onClick={e => {
-      setInputsData({
-        foreColor: RGB_HEX(getComputedStyle(e.target).color),
-        hiliteColor: RGB_HEX(getComputedStyle(e.target).backgroundColor)
-      })
-    }}>
-      
-    </div>
+    <div ref={ref} className={className} contentEditable></div>
   )
 }
 

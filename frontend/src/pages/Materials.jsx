@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styles from 'styles/presStyle.module.css'
-import { calcLength, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import Item from '../components/Item'
@@ -15,31 +15,29 @@ const Materials = ({ setUserInfo, userInfo }) => {
   const [isEditable, setIsEditable] = useState(false);
   const textEditorRef = useRef();
   const navigator = useNavigate()
-
   const isTeacher = useMemo(e => userInfo.type === 'teacher', [userInfo]);
 
-  const [inputsData, setInputsData] = useState({
-    foreColor: '#000000',
-    hiliteColor: '#ffffff'
-  })
   const inputs = useMemo(e => [
     {
       type: 'text',
       name: 'fontSize',
       text: 'Размер текста',
-      id: 'textSize'
+      id: 'textSize',
+      defaultValue: 10
     },
     {
       type: 'color',
       name: 'foreColor',
       text: 'Цвет текста',
-      id: 'textColor'
+      id: 'textColor',
+      defaultValue: '#000000'
     },
     {
       type: 'color',
       name: 'hiliteColor',
       text: 'Фон текста',
-      id: 'textBackColor'
+      id: 'textBackColor',
+      defaultValue: '#ffffff'
     }
   ], [])
   const positionBtns = useMemo(e => [
@@ -194,7 +192,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
           )}
         </motion.div>
         <div className={styles.editor}>
-          <TextEditor ref={textEditorRef} className={styles.textEditor} setInputsData={setInputsData} />
+          <TextEditor ref={textEditorRef} className={styles.textEditor}/>
           
           <div className={styles.addElementsContainer}>
             {isTeacher && (
@@ -202,26 +200,11 @@ const Materials = ({ setUserInfo, userInfo }) => {
                 <div className={styles.textEditorCoontainer}>
                   {
                     inputs.map((input, i) => {
-                      console.log(inputsData[input.name])
                       return (
                       <div key={i}>
                         <input
-                          onInput={e => {
-                            Object.keys(inputsData).forEach(value => {
-                              document.execCommand(value, false, inputsData[value])
-                            })
-                          }}
-                          onChange={e => {
-                            setInputsData(prev => {
-                              prev[input.name] = e.target.value
-
-                              return {...prev}
-                            })
-                          }}
-
+                          onInput={e => document.execCommand(input.name, false, e.target.value)}
                           {...input}
-
-                          value={inputsData[input.name]}
                           max={72}
                           // value={input.value[0] === '#' ? input.value : parseInt(input.value)}
                         />
