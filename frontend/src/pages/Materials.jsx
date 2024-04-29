@@ -11,7 +11,7 @@ import { useMutation } from '@tanstack/react-query'
 
 const Materials = ({ setUserInfo, userInfo }) => {
   const queryClient = useQueryClient();
-  const [themes, setTheme] = useState([]);
+  // const [themes, setTheme] = useState([]);
   const { id } = useParams();
   const [isEditable, setIsEditable] = useState(false);
   const textEditorRef = useRef();
@@ -110,7 +110,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
     onError: res => { }
   })
   const setItemAPI = useMutation({
-    mutationFn: data => axios.post('/api/teachersMaterials/' + data.id, data.theme),
+    mutationFn: data => axios.post('/api/teachersMaterials/' + data.id, data.value),
     onSuccess: res => {
       queryClient.invalidateQueries(['teachersMaterials'])
     },
@@ -135,30 +135,27 @@ const Materials = ({ setUserInfo, userInfo }) => {
 
   const saveItem = (e) => {
     setIsEditable(false);
-    setTheme(prev => {
-      const theme = prev.find(theme => theme.id === +id);
 
-      theme.value = e.target.textContent;
-      console.log(theme)
-      setItemAPI.mutate({ id, theme })
+    const data = values.data.find(data => data.id === +id);
+    data.value = e.target.textContent;
 
-      return [...prev];
-    });
+    console.log({ id, data })
+    setItemAPI.mutate({ id, value: data })
   }
 
-  useEffect(e => {
-    setTheme(prev => {
-      if (!id && values.data?.[0]?.id) {
-        console.log(id)
-        navigator(`${values.data[0].id}`, { replace: true })
-      }
+  // useEffect(e => {
+  //   setTheme(prev => {
+  //     if (!id && values.data?.[0]?.id) {
+  //       console.log(id)
+  //       navigator(`${values.data[0].id}`, { replace: true })
+  //     }
 
-      return values.data || []
-    });
-  }, [values.data]);
+  //     return values.data || []
+  //   });
+  // }, [values.data]);
 
-  useEffect(e =>
-    console.log(id), [id])
+  // useEffect(e =>
+  //   console.log(id), [id])
 
   return (
     <div className={styles.presContainer}>
@@ -178,8 +175,8 @@ const Materials = ({ setUserInfo, userInfo }) => {
             values.isLoading ? (
               <div className={styles.warn}>Загрузка...</div>
             ) : (
-              themes.length ? (
-                themes.map((item) => (
+              values.data.length ? (
+                values.data.map((item) => (
                   <Item key={item.id} index={item.id} saveChanges={saveItem} isEditable={isEditable} setIsEditable={setIsEditable} mayEdite={isTeacher ? true : false}>{isTeacher ? item.value : item.name}</Item>
                 ))
               ) : (
