@@ -134,13 +134,11 @@ const Materials = ({ setUserInfo, userInfo }) => {
   }
 
   const saveItem = (e) => {
-    setIsEditable(false);
-
     const data = values.data.find(data => data.id === +id);
-    data.value = e.target.textContent;
+    
+    setTimeout(e => setItemAPI.mutate({ id, value: { ...data, value: e.target.textContent } }));
 
-    console.log({ id, data })
-    setItemAPI.mutate({ id, value: data })
+    setIsEditable(false);
   }
 
   // useEffect(e => {
