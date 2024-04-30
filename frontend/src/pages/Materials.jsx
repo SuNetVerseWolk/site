@@ -11,10 +11,8 @@ import { useMutation } from '@tanstack/react-query'
 
 const Materials = ({ setUserInfo, userInfo }) => {
   const queryClient = useQueryClient();
-  // const [themes, setTheme] = useState([]);
   const { id } = useParams();
   const [isEditable, setIsEditable] = useState(false);
-  const textEditorRef = useRef();
   const navigator = useNavigate()
   const isTeacher = useMemo(e => userInfo.type === 'teacher', [userInfo]);
 
@@ -41,6 +39,18 @@ const Materials = ({ setUserInfo, userInfo }) => {
       defaultValue: '#ffffff'
     }
   ], [])
+
+  const userData = useQuery({
+    queryKey: [userInfo.type, userInfo.id],
+    queryFn: e => axios.get(`/api/${userInfo.type}/${userInfo.id}`).then(data => data.data)
+  })
+  const { data: values, isLoading } = useQuery({
+    queryKey: [isTeacher ? 'teachersMaterials' : 'teachers'],
+    queryFn: e => axios.get(`/api/${isTeacher ? 'teachersMaterials' : 'teachers'}`).then(data => {
+      return data.data
+    }),
+    staleTime: Infinity,
+  })
   const positionBtns = useMemo(e => [
     {
       src: '/left.png',
@@ -90,17 +100,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
       src: '/delete.png',
       onClick: e => deleteItemAPI()
     }
-  ], []);
-
-  const userData = useQuery({
-    queryKey: [userInfo.type, userInfo.id],
-    queryFn: e => axios.get(`/api/${userInfo.type}/${userInfo.id}`).then(data => data.data)
-  })
-  const values = useQuery({
-    queryKey: [isTeacher ? 'teachersMaterials' : 'teachers'],
-    queryFn: e => axios.get(`/api/${isTeacher ? 'teachersMaterials' : 'teachers'}`).then(data => data.data),
-    staleTime: Infinity,
-  })
+  ], [id]);
 
   const { mutate: addItemAPI } = useMutation({
     mutationFn: data => axios.post('/api/teachersMaterials', { id: Date.now(), value: '' }),
@@ -130,30 +130,18 @@ const Materials = ({ setUserInfo, userInfo }) => {
   const exit = () => {
     setUserInfo('');
 
-    localStorage.setItem('Info', '');
+    localStorage.setItem('info', '');
   }
 
   const saveItem = (e) => {
-    const data = values.data.find(data => data.id === +id);
-    
-    setTimeout(e => setItemAPI.mutate({ id, value: { ...data, value: e.target.textContent } }));
+    setTimeout(() => {
+      const data = values.find(data => data.id === +id);
+
+      setItemAPI.mutate({ id: id, value: { ...data, value: e.target.textContent } });
+    });
 
     setIsEditable(false);
   }
-
-  // useEffect(e => {
-  //   setTheme(prev => {
-  //     if (!id && values.data?.[0]?.id) {
-  //       console.log(id)
-  //       navigator(`${values.data[0].id}`, { replace: true })
-  //     }
-
-  //     return values.data || []
-  //   });
-  // }, [values.data]);
-
-  // useEffect(e =>
-  //   console.log(id), [id])
 
   return (
     <div className={styles.presContainer}>
@@ -170,11 +158,11 @@ const Materials = ({ setUserInfo, userInfo }) => {
       <div>
         <motion.div className={styles.asideBar}>
           {
-            values.isLoading ? (
+            isLoading ? (
               <div className={styles.warn}>Загрузка...</div>
             ) : (
-              values.data.length ? (
-                values.data.map((item) => (
+              values.length ? (
+                values.map((item) => (
                   <Item key={item.id} index={item.id} saveChanges={saveItem} isEditable={isEditable} setIsEditable={setIsEditable} mayEdite={isTeacher ? true : false}>{isTeacher ? item.value : item.name}</Item>
                 ))
               ) : (
@@ -188,7 +176,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
           )}
         </motion.div>
         <div className={styles.editor}>
-          <TextEditor ref={textEditorRef} className={styles.textEditor} />
+          <TextEditor className={styles.textEditor} />
 
           <div className={styles.addElementsContainer}>
             {isTeacher && (
@@ -215,12 +203,12 @@ const Materials = ({ setUserInfo, userInfo }) => {
 
                 <div className={styles.positionContainer}>
                   {
-                    positionBtns.map((button) => <AddButton {...button} tapAnim={false}>{button.text}</AddButton>)
+                    positionBtns.map((button, i) => <AddButton key={i} {...button} tapAnim={false}>{button.text}</AddButton>)
                   }
                 </div>
 
                 {
-                  buttonSrcs.map((button) => <AddButton {...button}>{button.text}</AddButton>)
+                  buttonSrcs.map((button, i) => <AddButton key={i} {...button}>{button.text}</AddButton>)
                 }
               </>
             )}
