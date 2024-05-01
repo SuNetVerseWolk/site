@@ -146,6 +146,7 @@
         border-radius: 10px;
         background: #fdfdfd;
         box-shadow: #2e2e2e36 0 5px 10px;
+        font-size: 20px;
 
         &::selection {
             background: #dae1ea;
@@ -175,7 +176,7 @@
 
     padding: 20px;
 
-    button:not(.positionContainer > button:last-child):last-child {
+    button:not(.positionContainer > button:last-child, .fontSizeContainer > button):last-child {
         background: #e46d6d;
 
         &:hover {
@@ -259,17 +260,49 @@
     }
 }
 
-.textEditorCoontainer {
+.fontSizeContainer {
+    div {
+        input  {
+            display: grid;
+            place-items: center;
+            text-align: center;
+        
+            border: none;
+            background-color: #dae1ea;
+
+            height: 50px;
+            width: 50px;
+            aspect-ratio: 1;
+            border-radius: 15px 15px 0 0;
+            padding: 10px;
+
+            &::-webkit-color-swatch-wrapper {
+                padding: 0;
+            }
+            
+            &::-webkit-color-swatch {
+                border: none;
+                border-radius: 20px;
+            }
+        }
+    }
+    button {
+        border-radius: 0;
+        border-radius: 0 0 15px 15px;
+    }
+}
+
+.textEditorContainer {
     display: flex;
     flex-flow: column nowrap;
     gap: 10px;
 
-    div {
+    div:not(.fontSizeContainer) {
         display: flex;
-        align-items: center;
+        align-items: center; 
         gap: 5px;
 
-        input {
+        input:not(.fontSizeContainer > div > input) {
             display: grid;
             place-items: center;
             text-align: center;
@@ -307,19 +340,35 @@
     }
 }
 
-@media (max-width: 1500px) {
+@media (max-width: 1400px) {
     .addElementsContainer {
         button {
-            width: 35px;
-            height: 35px;
+            width: 30px;
+            height: 30px;
+        }
+
+        button {
+            img {
+                height: 12px;
+                width: 12px;
+            }
         }
     }
 
-    .textEditorCoontainer {
+    .fontSizeContainer {
         div {
             input {
-                width: 40px;
-                height: 40px;
+                width: 30px;
+                height: 30px;
+            }
+        }
+    }
+
+    .textEditorContainer {
+        div:not(.fontSizeContainer) {
+            input:not(.fontSizeContainer > div > input) {
+                width: 30px;
+                height: 30px;
             }
         }
     }

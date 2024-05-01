@@ -13,26 +13,27 @@ const Materials = ({ setUserInfo, userInfo }) => {
   const queryClient = useQueryClient();
   const { id } = useParams();
   const [isEditable, setIsEditable] = useState(false);
-  const navigator = useNavigate()
+  const navigator = useNavigate();
   const isTeacher = useMemo(e => userInfo.type === 'teacher', [userInfo]);
+  const [fontSize, setFontSize] = useState('');
 
   const inputs = useMemo(e => [
+    // {
+    //   type: 'text',
+    //   name: 'fontSize',
+    //   text: 'Размер текста',
+    //   id: 'textSize',
+    //   defaultValue: 10
+    // },
     {
-      type: 'text',
-      name: 'fontSize',
-      text: 'Размер текста',
-      id: 'textSize',
-      defaultValue: 10
-    },
-    {
-      type: 'color',
+      // type: 'color',
       name: 'foreColor',
       text: 'Цвет текста',
       id: 'textColor',
       defaultValue: '#000000'
     },
     {
-      type: 'color',
+      // type: 'color',
       name: 'hiliteColor',
       text: 'Фон текста',
       id: 'textBackColor',
@@ -97,6 +98,11 @@ const Materials = ({ setUserInfo, userInfo }) => {
       }
     },
     {
+      src: '/save.png',
+      text: 'Сохранить',
+      // onClick: e => deleteItemAPI()
+    },
+    {
       src: '/delete.png',
       onClick: e => deleteItemAPI()
     }
@@ -143,6 +149,8 @@ const Materials = ({ setUserInfo, userInfo }) => {
     setIsEditable(false);
   }
 
+  console.log(fontSize);
+
   return (
     <div className={styles.presContainer}>
       <header>
@@ -181,7 +189,26 @@ const Materials = ({ setUserInfo, userInfo }) => {
           <div className={styles.addElementsContainer}>
             {isTeacher && (
               <>
-                <div className={styles.textEditorCoontainer}>
+                <div className={styles.textEditorContainer}>
+                  <div className={styles.fontSizeContainer}>
+                    <div>
+                      <input
+                        id='textSize'
+                        max={72}
+                        defaultValue={20}
+                        onInput={e => setFontSize(e.target.value)}
+                      />
+                      <label htmlFor='textSize'>
+                        Размер текста
+                      </label>
+                    </div>
+
+                    <button onClick={e => {
+                      document.execCommand('fontSize', false, fontSize.slice(0, 1));
+
+                      console.log(fontSize);
+                    }}><img src="/tick.png" alt="..." /></button>
+                  </div>
                   {
                     inputs.map((input, i) => {
                       return (
@@ -189,6 +216,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
                           <input
                             onInput={e => document.execCommand(input.name, false, e.target.value)}
                             {...input}
+                            type='color'
                             max={72}
                           // value={input.value[0] === '#' ? input.value : parseInt(input.value)}
                           />
