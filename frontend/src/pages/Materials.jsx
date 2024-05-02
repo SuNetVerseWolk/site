@@ -39,11 +39,12 @@ const Materials = ({ setUserInfo, userInfo }) => {
     queryFn: e => axios.get(`/api/${userInfo.type}/${userInfo.id}`).then(data => data.data)
   });
   const { data: values, isLoading } = useQuery({
-    queryKey: [isTeacher ? 'teachersMaterials' : 'teachers'],
-    queryFn: e => axios.get(`/api/${isTeacher ? 'teachersMaterials' : 'teachers'}`).then(data => {
-      return data.data
-    }),
-    staleTime: Infinity,
+    queryKey: [isTeacher ? 'teachersMaterials' : 'teachers', userInfo.id],
+    queryFn: e => axios.get(`/api/${isTeacher ? 'teachersMaterials' : 'teachers'}?teacherID=${userInfo.id}`)
+      .then(data => {
+        return data.data
+      }
+    )
   });
   const positionBtns = useMemo(e => [
     {
@@ -102,28 +103,34 @@ const Materials = ({ setUserInfo, userInfo }) => {
   ], [id]);
 
   const { mutate: addItemAPI } = useMutation({
-    mutationFn: data => axios.post('/api/teachersMaterials', { id: Date.now(), value: '' }),
+    mutationFn: async data => await axios.post(`/api/teachersMaterials?teacherID=${userInfo.id}`, { id: Date.now(), value: '' }),
     onSuccess: res => {
       queryClient.invalidateQueries(['teachersMaterials'])
     },
-    onError: res => { }
+    onError: res => {
+    },
+    retry: 3
   });
-  const setItemAPI = useMutation({
-    mutationFn: data => axios.post('/api/teachersMaterials/' + data.id, data.value),
+  const { mutate: setItemAPI } = useMutation({
+    mutationFn: async data => await axios.post(`/api/teachersMaterials/${data.id}?teacherID=${userInfo.id}`, data.value),
+    onMutate: res => {
+      setIsEditable(false);
+    },
     onSuccess: res => {
       queryClient.invalidateQueries(['teachersMaterials'])
     },
     onError: res => { }
   });
   const { mutate: deleteItemAPI } = useMutation({
-    mutationFn: data => {
-      console.log('/api/teachersMaterials/' + id)
-      axios.delete('/api/teachersMaterials/' + id).then(data => console.log(data))
+    mutationFn: async data => {
+      return await axios.delete(`/api/teachersMaterials/${id}?teacherID=${userInfo.id}`).then(data => data)
     },
     onSuccess: res => {
       queryClient.invalidateQueries(['teachersMaterials'])
     },
-    onError: res => { }
+    onError: res => {
+    },
+    retry: 3
   });
 
   const exit = () => {
@@ -133,13 +140,9 @@ const Materials = ({ setUserInfo, userInfo }) => {
   }
 
   const saveItem = (e) => {
-    setTimeout(() => {
-      const data = values.find(data => data.id === +id);
+    const data = values.find(data => data.id === +id);
 
-      setItemAPI.mutate({ id: id, value: { ...data, value: e.target.textContent } });
-    });
-
-    setIsEditable(false);
+    setItemAPI({ id: id, value: { ...data, value: e.target.textContent } });
   }
 
   return (

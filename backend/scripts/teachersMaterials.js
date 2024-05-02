@@ -10,24 +10,29 @@ const setTeachersMaterials = data => setData('teachersMaterials', data);
 router.get('/', (req, res) => {
 	const data = getTeachersMaterials();
 	
-	res.json(data)
+	res.json(data.find(teachersMaterial => teachersMaterial.teacherID === +req.query.teacherID)?.materials || []);
 })
 
-router.get('/:id', (req, res) => {
-	let data = getTeachersMaterials();
+// router.get('/:id', (req, res) => {
+// 	let data = getTeachersMaterials();
 
-	data = data.find(material => material.id === req.body.id);
+// 	data = data.find(material => material.id === req.body.id);
 
-	res.json(data);
-});
+// 	res.json(data);
+// });
 
 router.post('/', (req, res) => {
     const
     newItem = req.body,
-    data = getTeachersMaterials();
+    data = getTeachersMaterials(),
+    findDataIndex = e => data.findIndex(data => data.teacherID === +req.query.teacherID),
+    dataIndex = findDataIndex();
 
     if (newItem) {
-        data.push(newItem);
+        if (dataIndex < 0)
+            data.push({teacherID: +req.query.teacherID, materials: [newItem]})
+        else
+            data[dataIndex].materials.push(newItem);
 
         if (setTeachersMaterials(data)) {
             res.status(200).json(newItem.id);
@@ -36,33 +41,38 @@ router.post('/', (req, res) => {
         }
     }
 
-    res.status(500).json(false);
+    res.status(500).json(newItem);
 });
 
 router.post('/:id', (req, res) => {
 	const
-	teachersMaterials = getTeachersMaterials(),
-	teachersMaterialIndex = teachersMaterials.findIndex(teachersMaterial => teachersMaterial.id === +req.params.id);
+    itemId = +req.params.id,
+	data = getTeachersMaterials(),
+    dataIndex = data.findIndex(data => data.teacherID === +req.query.teacherID),
+	teachersMaterialIndex = data[dataIndex].materials.findIndex(material => material.id === itemId);
 
-	if (teachersMaterialIndex < 0) return res.status(404).json(false);
-	teachersMaterials[teachersMaterialIndex] = req.body;
+	if (teachersMaterialIndex < 0) return res.status(403).json(false);
+	data[dataIndex].materials[teachersMaterialIndex] = req.body;
 	
-	if (setTeachersMaterials(teachersMaterials)) {
+	if (setTeachersMaterials(data)) {
         res.status(200).json(true);
-    } else res.status(500).json(false);
+    } else res.status(500).json(req.body);
 })
 
 router.delete('/:id', (req, res) => {
-	const itemId = +req.params.id;
-	let data = getTeachersMaterials();
+	const
+    itemId = +req.params.id,
+    data = getTeachersMaterials(),
+    dataIndex = data.findIndex(data => data.teacherID === +req.query.teacherID),
+    teachersMaterialIndex = data[dataIndex].materials.findIndex(material => material.id === itemId);
 
-	if (data.findIndex(item => item.id === itemId) < 0) return res.status(403).json(false)
-	data = data.filter(item => item.id != itemId)
+	if (teachersMaterialIndex < 0) return res.status(403).json(false)
+	data[dataIndex].materials = data[dataIndex].materials.filter(item => item.id != itemId)
 
 	if (setTeachersMaterials(data)) {
 		res.status(200).json(true);
 	} else {
-		res.status(500)
+		res.status(500).json(false);
 	}
 })
 
