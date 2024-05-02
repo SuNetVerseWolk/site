@@ -8,6 +8,8 @@ import AddButton from 'components/AddButton'
 import { useNavigate, useParams } from 'react-router-dom'
 import TextEditor from 'components/TextEditor'
 import { useMutation } from '@tanstack/react-query'
+import FontSizeInput from 'components/FontSizeInput'
+import ColorInput from 'components/ColorInput'
 
 const Materials = ({ setUserInfo, userInfo }) => {
   const queryClient = useQueryClient();
@@ -18,40 +20,31 @@ const Materials = ({ setUserInfo, userInfo }) => {
   const [fontSize, setFontSize] = useState('');
 
   const inputs = useMemo(e => [
-    // {
-    //   type: 'text',
-    //   name: 'fontSize',
-    //   text: 'Размер текста',
-    //   id: 'textSize',
-    //   defaultValue: 10
-    // },
     {
-      // type: 'color',
       name: 'foreColor',
       text: 'Цвет текста',
       id: 'textColor',
       defaultValue: '#000000'
     },
     {
-      // type: 'color',
       name: 'hiliteColor',
       text: 'Фон текста',
       id: 'textBackColor',
       defaultValue: '#ffffff'
     }
-  ], [])
+  ], []);
 
   const userData = useQuery({
     queryKey: [userInfo.type, userInfo.id],
     queryFn: e => axios.get(`/api/${userInfo.type}/${userInfo.id}`).then(data => data.data)
-  })
+  });
   const { data: values, isLoading } = useQuery({
     queryKey: [isTeacher ? 'teachersMaterials' : 'teachers'],
     queryFn: e => axios.get(`/api/${isTeacher ? 'teachersMaterials' : 'teachers'}`).then(data => {
       return data.data
     }),
     staleTime: Infinity,
-  })
+  });
   const positionBtns = useMemo(e => [
     {
       src: '/left.png',
@@ -67,7 +60,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
       text: 'Право',
       onClick: e => document.execCommand('JustifyRight')
     },
-  ], [])
+  ], []);
   const buttonSrcs = useMemo(e => [
     {
       src: '/heading.png',
@@ -114,14 +107,14 @@ const Materials = ({ setUserInfo, userInfo }) => {
       queryClient.invalidateQueries(['teachersMaterials'])
     },
     onError: res => { }
-  })
+  });
   const setItemAPI = useMutation({
     mutationFn: data => axios.post('/api/teachersMaterials/' + data.id, data.value),
     onSuccess: res => {
       queryClient.invalidateQueries(['teachersMaterials'])
     },
     onError: res => { }
-  })
+  });
   const { mutate: deleteItemAPI } = useMutation({
     mutationFn: data => {
       console.log('/api/teachersMaterials/' + id)
@@ -131,7 +124,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
       queryClient.invalidateQueries(['teachersMaterials'])
     },
     onError: res => { }
-  })
+  });
 
   const exit = () => {
     setUserInfo('');
@@ -148,8 +141,6 @@ const Materials = ({ setUserInfo, userInfo }) => {
 
     setIsEditable(false);
   }
-
-  console.log(fontSize);
 
   return (
     <div className={styles.presContainer}>
@@ -190,43 +181,13 @@ const Materials = ({ setUserInfo, userInfo }) => {
             {isTeacher && (
               <>
                 <div className={styles.textEditorContainer}>
-                  <div className={styles.fontSizeContainer}>
-                    <div>
-                      <input
-                        id='textSize'
-                        max={72}
-                        defaultValue={20}
-                        onInput={e => setFontSize(e.target.value)}
-                      />
-                      <label htmlFor='textSize'>
-                        Размер текста
-                      </label>
-                    </div>
+                  <FontSizeInput
+                    setFontSize={setFontSize}
+                    fontSize={fontSize}
+                    className={styles.fontSizeContainer}
+                  />
 
-                    <button onClick={e => {
-                      document.execCommand('fontSize', false, fontSize.slice(0, 1));
-
-                      console.log(fontSize);
-                    }}><img src="/tick.png" alt="..." /></button>
-                  </div>
-                  {
-                    inputs.map((input, i) => {
-                      return (
-                        <div key={i}>
-                          <input
-                            onInput={e => document.execCommand(input.name, false, e.target.value)}
-                            {...input}
-                            type='color'
-                            max={72}
-                          // value={input.value[0] === '#' ? input.value : parseInt(input.value)}
-                          />
-                          <label htmlFor={input.id}>
-                            {input.text}
-                          </label>
-                        </div>
-                      )
-                    })
-                  }
+                  {inputs.map((input, i) => <ColorInput key={i} input={input} />)}
                 </div>
 
                 <div className={styles.positionContainer}>
