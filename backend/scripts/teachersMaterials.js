@@ -13,14 +13,6 @@ router.get('/', (req, res) => {
 	res.json(data.find(teachersMaterial => teachersMaterial.teacherID === +req.query.teacherID)?.materials || []);
 })
 
-// router.get('/:id', (req, res) => {
-// 	let data = getTeachersMaterials();
-
-// 	data = data.find(material => material.id === req.body.id);
-
-// 	res.json(data);
-// });
-
 router.post('/', (req, res) => {
     const
     newItem = req.body,

@@ -6,10 +6,10 @@ const Item = ({ index, children, isEditable, setIsEditable, saveChanges, mayEdit
   const linkRef = useRef();
 
   return (
-    <motion.div whileInView={{ scale: 1 }} initial={{ scale: .9 }} id='activeItem' onBlur={saveChanges} onChange={e => console.log(e.target.textContent)} onClick={e => {
+    <motion.div whileInView={{ scale: 1 }} initial={{ scale: .9 }} id='activeItem' onBlur={e => saveChanges(e, index)} onClick={e => {
         if (mayEdite) setIsEditable(true);
 
-        // linkRef.current.focus();
+        linkRef.current.focus();
         linkRef.current.click();
       }}>
       <NavLink to={`${index}`} ref={linkRef} contentEditable={isEditable}>{children}</NavLink>

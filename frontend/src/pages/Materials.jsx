@@ -139,8 +139,9 @@ const Materials = ({ setUserInfo, userInfo }) => {
     localStorage.setItem('info', '');
   }
 
-  const saveItem = (e) => {
+  const saveItem = (e, id) => {
     const data = values.find(data => data.id === +id);
+    console.log({ id: id, value: { ...data, value: e.target.textContent } })
 
     setItemAPI({ id: id, value: { ...data, value: e.target.textContent } });
   }
