@@ -13,7 +13,7 @@ import ColorInput from 'components/ColorInput'
 
 const Materials = ({ setUserInfo, userInfo }) => {
   const queryClient = useQueryClient();
-  const { id } = useParams();
+  const { id, teacherID } = useParams();
   const [isEditable, setIsEditable] = useState(false);
   const navigator = useNavigate();
   const isTeacher = useMemo(e => userInfo.type === 'teachers', [userInfo]);
@@ -39,8 +39,16 @@ const Materials = ({ setUserInfo, userInfo }) => {
     queryFn: e => axios.get(`/api/${userInfo.type}/${userInfo.id}`).then(data => data.data)
   });
   const { data: values, isLoading } = useQuery({
-    queryKey: [isTeacher ? 'teachersMaterials' : 'teachers', userInfo.id],
-    queryFn: e => axios.get(`/api/${isTeacher ? 'teachersMaterials' : 'teachers'}?teacherID=${userInfo.id}`)
+    queryKey: ['teachersMaterials', teacherID || userInfo.id],
+    queryFn: e => axios.get(`/api/teachersMaterials?teacherID=${teacherID || userInfo.id}`)
+      .then(data => {
+        return data.data
+      }
+    )
+  });
+  const { data: teacehrs, isLoading: isTeachersLoading } = useQuery({
+    queryKey: ['teachers'],
+    queryFn: e => axios.get('/api/teachers')
       .then(data => {
         return data.data
       }
@@ -166,7 +174,17 @@ const Materials = ({ setUserInfo, userInfo }) => {
             ) : (
               values?.length ? (
                 values.map((item) => (
-                  <Item key={item.id} index={item.id} saveChanges={saveItem} isEditable={isEditable} setIsEditable={setIsEditable} mayEdite={isTeacher ? true : false}>{isTeacher ? item.value : item.name}</Item>
+                  <Item
+                    key={item.id}
+                    index={item.id}
+                    teacherID={teacherID}
+                    saveChanges={saveItem}
+                    isEditable={isEditable}
+                    setIsEditable={setIsEditable}
+                    mayEdite={isTeacher}
+                  >
+                    {item.value}
+                  </Item>
                 ))
               ) : (
                 <motion.div whileInView={{ scale: 1 }} initial={{ scale: .9 }} className={styles.warn}>Пусто</motion.div>
@@ -181,31 +199,55 @@ const Materials = ({ setUserInfo, userInfo }) => {
         <div className={styles.editor}>
           <TextEditor className={styles.textEditor} />
 
-          <div className={styles.addElementsContainer}>
-            {isTeacher && (
-              <>
-                <div className={styles.textEditorContainer}>
-                  <FontSizeInput
-                    setFontSize={setFontSize}
-                    fontSize={fontSize}
-                    className={styles.fontSizeContainer}
-                  />
+          {isTeacher ? (
+            <div className={styles.addElementsContainer}>
+                  <div className={styles.textEditorContainer}>
+                    <FontSizeInput
+                      setFontSize={setFontSize}
+                      fontSize={fontSize}
+                      className={styles.fontSizeContainer}
+                    />
 
-                  {inputs.map((input, i) => <ColorInput key={i} input={input} />)}
-                </div>
+                    {inputs.map((input, i) => <ColorInput key={i} input={input} />)}
+                  </div>
 
-                <div className={styles.positionContainer}>
+                  <div className={styles.positionContainer}>
+                    {
+                      positionBtns.map((button, i) => <AddButton key={i} {...button} tapAnim={false}>{button.text}</AddButton>)
+                    }
+                  </div>
+
                   {
-                    positionBtns.map((button, i) => <AddButton key={i} {...button} tapAnim={false}>{button.text}</AddButton>)
+                    buttonSrcs.map((button, i) => <AddButton key={i} {...button}>{button.text}</AddButton>)
                   }
-                </div>
-
-                {
-                  buttonSrcs.map((button, i) => <AddButton key={i} {...button}>{button.text}</AddButton>)
-                }
-              </>
-            )}
-          </div>
+            </div>
+          ) : (
+            <motion.div className={styles.asideBar}>
+              {
+                isTeachersLoading ? (
+                  <div className={styles.warn}>Загрузка...</div>
+                ) : (
+                  teacehrs?.length ? (
+                    teacehrs.map((item) => (
+                      <Item
+                        key={item.id}
+                        index={+id}
+                        teacherID={item.id}
+                        saveChanges={saveItem}
+                        isEditable={isEditable}
+                        setIsEditable={setIsEditable}
+                        mayEdite={isTeacher}
+                      >
+                        {item.name}
+                      </Item>
+                    ))
+                  ) : (
+                    <motion.div whileInView={{ scale: 1 }} initial={{ scale: .9 }} className={styles.warn}>Пусто</motion.div>
+                  )
+                )
+              }
+            </motion.div>
+          )}
         </div>
       </div>
     </div>
