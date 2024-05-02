@@ -16,7 +16,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
   const { id } = useParams();
   const [isEditable, setIsEditable] = useState(false);
   const navigator = useNavigate();
-  const isTeacher = useMemo(e => userInfo.type === 'teacher', [userInfo]);
+  const isTeacher = useMemo(e => userInfo.type === 'teachers', [userInfo]);
   const [fontSize, setFontSize] = useState('');
 
   const inputs = useMemo(e => [
@@ -160,7 +160,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
             isLoading ? (
               <div className={styles.warn}>Загрузка...</div>
             ) : (
-              values.length ? (
+              values?.length ? (
                 values.map((item) => (
                   <Item key={item.id} index={item.id} saveChanges={saveItem} isEditable={isEditable} setIsEditable={setIsEditable} mayEdite={isTeacher ? true : false}>{isTeacher ? item.value : item.name}</Item>
                 ))
