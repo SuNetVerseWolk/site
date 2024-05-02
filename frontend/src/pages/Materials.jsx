@@ -16,7 +16,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
   const { id, teacherID } = useParams();
   const [isEditable, setIsEditable] = useState(false);
   const navigator = useNavigate();
-  const isTeacher = useMemo(e => userInfo.type === 'teachers', [userInfo]);
+  const isTeacher = useMemo(e => userInfo.type === 'teachers', [userInfo.type]);
   const [fontSize, setFontSize] = useState('');
 
   const inputs = useMemo(e => [
@@ -33,13 +33,14 @@ const Materials = ({ setUserInfo, userInfo }) => {
       defaultValue: '#ffffff'
     }
   ], []);
+  console.log(isTeacher)
 
   const userData = useQuery({
     queryKey: [userInfo.type, userInfo.id],
     queryFn: e => axios.get(`/api/${userInfo.type}/${userInfo.id}`).then(data => data.data)
   });
   const { data: values, isLoading } = useQuery({
-    queryKey: ['teachersMaterials', teacherID || userInfo.id],
+    queryKey: ['teachersMaterials', isTeacher ? userInfo.id : teacherID],
     queryFn: e => axios.get(`/api/teachersMaterials?teacherID=${isTeacher ? userInfo.id : teacherID}`)
       .then(data => {
         return data.data
