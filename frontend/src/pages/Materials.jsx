@@ -40,7 +40,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
   });
   const { data: values, isLoading } = useQuery({
     queryKey: ['teachersMaterials', teacherID || userInfo.id],
-    queryFn: e => axios.get(`/api/teachersMaterials?teacherID=${teacherID || userInfo.id}`)
+    queryFn: e => axios.get(`/api/teachersMaterials?teacherID=${isTeacher ? userInfo.id : teacherID}`)
       .then(data => {
         return data.data
       }
