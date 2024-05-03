@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { editor, textEditor, presContainer } from 'styles/presStyle.module.css'
 import { motion } from 'framer-motion'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -10,6 +10,7 @@ import AsideBar from 'src/Layouts/AsideBar'
 import TextEditorTools from 'src/Layouts/TextEditorTools'
 
 const Materials = ({ setUserInfo, userInfo }) => {
+  const textEditorRef = useRef();
   const queryClient = useQueryClient();
   const { id, teacherID } = useParams();
   const [isEditable, setIsEditable] = useState(false);
@@ -44,13 +45,14 @@ const Materials = ({ setUserInfo, userInfo }) => {
     )
   });
   const { data: text, isLoading: isTextLoading } = useQuery({
-    queryKey: ['text', id],
+    queryKey: ['text', id, isTeacher ? userInfo.id : teacherID],
     queryFn: e => axios.get(`/api/text/${id}?teacherID=${isTeacher ? userInfo.id : teacherID}`)
       .then(data => {
-        console.log(data.data)
-        return data.data
+        console.log('data', data.data)
+        return data.data.text
       }
-    )
+    ),
+    enabled: !!values
   });
   const { data: teacehrs, isLoading: isTeachersLoading } = useQuery({
     queryKey: ['teachers'],
@@ -108,7 +110,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
     {
       src: '/save.png',
       text: 'Сохранить',
-      onClick: e => saveTextAPI(e.innerHtml)
+      onClick: e => setTextAPI()
     },
     {
       src: '/delete.png',
@@ -146,14 +148,13 @@ const Materials = ({ setUserInfo, userInfo }) => {
     },
     retry: 3
   });
-  const { mutate: saveTextAPI } = useMutation({
-    mutationFn: async data => {
-      return await axios.post(`/api/text/${id}?teacherID=${userInfo.id}`).then(data => data)
+  const { mutate: setTextAPI } = useMutation({
+    mutationKey: ["text", id, isTeacher ? userInfo.id : teacherID],
+    mutationFn: data => {
+      return axios.post(`/api/text/${id}?teacherID=${isTeacher ? userInfo.id : teacherID}`, {text: textEditorRef.current.innerHTML}).then(data => data)
     },
     onSuccess: res => {
-      queryClient.invalidateQueries(['text', id])
-    },
-    onError: res => {
+      queryClient.invalidateQueries(['text', res.id, isTeacher ? userInfo.id : teacherID])
     },
     retry: 3
   });
@@ -198,7 +199,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
           )}
         </AsideBar>
         <div className={editor}>
-          <TextEditor className={textEditor} text={text} isLoading={isTextLoading} />
+          <TextEditor userInfo={userInfo} itsRef={textEditorRef} className={textEditor} text={text} isLoading={isTextLoading} />
 
           {isTeacher ? (
             <TextEditorTools

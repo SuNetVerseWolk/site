@@ -1,7 +1,8 @@
 import Loading from 'components/Loading'
 import React from 'react'
+import ReactHtmlParser from 'html-react-parser'
 
-const TextEditor = ({ className, text, isLoading }) => {
+const TextEditor = ({ itsRef, className, text, isLoading }) => {
   return (
     <>
       {isLoading ? (
@@ -10,10 +11,10 @@ const TextEditor = ({ className, text, isLoading }) => {
         </div>
       ) : (
         <div
+          ref={itsRef}
           className={className}
           contentEditable
-          dangerouslySetInnerHTML={{ __html: text }}
-        ></div>
+        >{text ? ReactHtmlParser(text) : ''}</div>
       )}
     </>
   )
