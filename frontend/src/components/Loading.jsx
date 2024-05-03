@@ -5,9 +5,10 @@ const Loading = () => {
 		<div style={{
 			height: '100%',
 			display: 'grid',
-			placeItems: 'center'
+			placeItems: 'center',
+			color: '#dae1ea'
 		}}>
-			<h1>Loading...</h1>
+			<h1>Загрузка...</h1>
 		</div>
 	)
 }
