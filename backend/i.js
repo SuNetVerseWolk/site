@@ -21,6 +21,10 @@ app.use('/students', studentsRoute);
 app.use('/teachers', teachersRoute);
 app.use('/teachersMaterials', teachersMaterialsRoute);
 
+app.get('/text/:id', (req, res) => {
+	res.send('<h1>TEXT</h1>')
+})
+
 app.post('/logIn', (req, res) => {
 	const
 	teachers = getData(dataPaths.teachers),

@@ -43,6 +43,15 @@ const Materials = ({ setUserInfo, userInfo }) => {
       }
     )
   });
+  const { data: text, isLoading: isTextLoading } = useQuery({
+    queryKey: ['text', id],
+    queryFn: e => axios.get(`/api/text/${id}?teacherID=${isTeacher ? userInfo.id : teacherID}`)
+      .then(data => {
+        console.log(data.data)
+        return data.data
+      }
+    )
+  });
   const { data: teacehrs, isLoading: isTeachersLoading } = useQuery({
     queryKey: ['teachers'],
     queryFn: e => axios.get('/api/teachers')
@@ -99,7 +108,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
     {
       src: '/save.png',
       text: 'Сохранить',
-      // onClick: e => deleteItemAPI()
+      onClick: e => saveTextAPI(e.innerHtml)
     },
     {
       src: '/delete.png',
@@ -132,6 +141,17 @@ const Materials = ({ setUserInfo, userInfo }) => {
     },
     onSuccess: res => {
       queryClient.invalidateQueries(['teachersMaterials'])
+    },
+    onError: res => {
+    },
+    retry: 3
+  });
+  const { mutate: saveTextAPI } = useMutation({
+    mutationFn: async data => {
+      return await axios.post(`/api/text/${id}?teacherID=${userInfo.id}`).then(data => data)
+    },
+    onSuccess: res => {
+      queryClient.invalidateQueries(['text', id])
     },
     onError: res => {
     },
@@ -178,7 +198,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
           )}
         </AsideBar>
         <div className={editor}>
-          <TextEditor className={textEditor} />
+          <TextEditor className={textEditor} text={text} isLoading={isTextLoading} />
 
           {isTeacher ? (
             <TextEditorTools
