@@ -3,7 +3,7 @@ import { editor, textEditor, presContainer } from 'styles/presStyle.module.css'
 import { motion } from 'framer-motion'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import TextEditor from 'src/Layouts/TextEditor'
 import { useMutation } from '@tanstack/react-query'
 import AsideBar from 'src/Layouts/AsideBar'
@@ -16,6 +16,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
   const [isEditable, setIsEditable] = useState(false);
   const isTeacher = useMemo(e => userInfo.type === 'teachers', [userInfo.type]);
   const [fontSize, setFontSize] = useState('');
+  const navigation = useNavigate();
 
   const inputs = useMemo(e => [
     {
@@ -36,13 +37,32 @@ const Materials = ({ setUserInfo, userInfo }) => {
     queryKey: [userInfo.type, userInfo.id],
     queryFn: e => axios.get(`/api/${userInfo.type}/${userInfo.id}`).then(data => data.data)
   });
+  const { data: teachers, isLoading: isTeachersLoading } = useQuery({
+    queryKey: ['teachers'],
+    queryFn: e => axios.get('/api/teachers')
+      .then(data => {
+        if (!teacherID) {
+          console.log(data.data[0].id)
+          navigation(`/${data.data[0].id}/${data.data[0].id}`)
+        }
+        return data.data
+      }
+    )
+  });
   const { data: values, isLoading } = useQuery({
     queryKey: ['teachersMaterials', isTeacher ? userInfo.id : teacherID],
     queryFn: e => axios.get(`/api/teachersMaterials?teacherID=${isTeacher ? userInfo.id : teacherID}`)
       .then(data => {
+        if (id === teacherID) {
+          navigation(`/${data.data[0].id}/${teacherID}`)
+        } else if(!data.data.find(value => value.id === +id)) {
+          navigation(`/${data.data[0].id}/${teacherID}`)
+        }
+
         return data.data
       }
-    )
+    ),
+    enabled: isTeacher ? true : !!teachers
   });
   const { data: text, isLoading: isTextLoading, isFetching } = useQuery({
     queryKey: ['text', id, isTeacher ? userInfo.id : teacherID],
@@ -52,14 +72,6 @@ const Materials = ({ setUserInfo, userInfo }) => {
       }
     ),
     enabled: !!values
-  });
-  const { data: teachers, isLoading: isTeachersLoading } = useQuery({
-    queryKey: ['teachers'],
-    queryFn: e => axios.get('/api/teachers')
-      .then(data => {
-        return data.data
-      }
-    )
   });
   const positionBtns = useMemo(e => [
     {
@@ -211,6 +223,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
             itsRef={textEditorRef}
             className={textEditor}
             isLoading={isTextLoading}
+            isEditable={isTeacher}
           />
 
           {isTeacher ? (

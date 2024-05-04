@@ -11,7 +11,6 @@ const AsideBar = ({
 	teacherID,
 	isTeacher,
 	isLoading,
-	isPending,
 	isEditable,
 	setIsEditable,
 }) => {

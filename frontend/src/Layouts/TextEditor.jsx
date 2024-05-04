@@ -2,7 +2,7 @@ import Loading from 'components/Loading'
 import React from 'react'
 import ReactHtmlParser from 'html-react-parser'
 
-const TextEditor = ({ itsRef, className, text, isLoading }) => {
+const TextEditor = ({ itsRef, className, text, isLoading, isEditable }) => {
   return (
     <>
       {isLoading ? (
@@ -13,7 +13,7 @@ const TextEditor = ({ itsRef, className, text, isLoading }) => {
         <div
           ref={itsRef}
           className={className}
-          contentEditable
+          contentEditable={isEditable}
         >
           {text ? ReactHtmlParser(text) : ''}
         </div>
