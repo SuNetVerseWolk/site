@@ -44,11 +44,10 @@ const Materials = ({ setUserInfo, userInfo }) => {
       }
     )
   });
-  const { data: text, isLoading: isTextLoading } = useQuery({
+  const { data: text, isLoading: isTextLoading, isFetching } = useQuery({
     queryKey: ['text', id, isTeacher ? userInfo.id : teacherID],
     queryFn: e => axios.get(`/api/text/${id}?teacherID=${isTeacher ? userInfo.id : teacherID}`)
       .then(data => {
-        console.log('data', data.data)
         return data.data.text
       }
     ),
@@ -199,7 +198,15 @@ const Materials = ({ setUserInfo, userInfo }) => {
           )}
         </AsideBar>
         <div className={editor}>
-          <TextEditor userInfo={userInfo} itsRef={textEditorRef} className={textEditor} text={text} isLoading={isTextLoading} />
+          <TextEditor
+            key={text}
+            text={text}
+            userInfo={userInfo}
+            itsRef={textEditorRef}
+            className={textEditor}
+            isFetching={isFetching}
+            isLoading={isTextLoading}
+          />
 
           {isTeacher ? (
             <TextEditorTools
