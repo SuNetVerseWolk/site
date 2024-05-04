@@ -204,7 +204,6 @@ const Materials = ({ setUserInfo, userInfo }) => {
             userInfo={userInfo}
             itsRef={textEditorRef}
             className={textEditor}
-            isFetching={isFetching}
             isLoading={isTextLoading}
           />
 
