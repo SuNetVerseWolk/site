@@ -6,10 +6,10 @@ import {
 	addElementsContainer,
 	textEditorContainer,
 	fontSizeContainer,
-	positionContainer
+	positionContainer,
 } from 'styles/presStyle.module.css'
 
-const TextEditorTools = ({ setFontSize, fontSize, inputs, positionBtns, buttonSrcs }) => {
+const TextEditorTools = ({ setFontSize, fontSize, inputs, positionBtns, buttonSrcs, isPending }) => {
 	return (
 		<div className={addElementsContainer}>
 			<div className={textEditorContainer}>
@@ -29,7 +29,16 @@ const TextEditorTools = ({ setFontSize, fontSize, inputs, positionBtns, buttonSr
 			</div>
 
 			{
-				buttonSrcs.map((button, i) => <AddButton key={i} {...button}>{button.text}</AddButton>)
+				buttonSrcs.map((button, i) => {
+					console.log(button.style, isPending)
+					return (
+						<AddButton
+							key={i}
+							{...button}
+							style={button.style && isPending && button.style}
+						>{button.text}</AddButton>
+					)
+				})
 			}
 		</div>
 	)

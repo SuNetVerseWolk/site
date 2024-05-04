@@ -216,7 +216,7 @@
                 left: 110%;
                 scale: 0;
     
-                color: #6dabe4;
+                color: var(--color);
     
                 font-size: 15px;
                 animation: appear .3s forwards;

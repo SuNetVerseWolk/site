@@ -53,7 +53,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
     ),
     enabled: !!values
   });
-  const { data: teacehrs, isLoading: isTeachersLoading } = useQuery({
+  const { data: teachers, isLoading: isTeachersLoading } = useQuery({
     queryKey: ['teachers'],
     queryFn: e => axios.get('/api/teachers')
       .then(data => {
@@ -77,45 +77,6 @@ const Materials = ({ setUserInfo, userInfo }) => {
       onClick: e => document.execCommand('JustifyRight')
     },
   ], []);
-  const buttonSrcs = useMemo(e => [
-    {
-      src: '/heading.png',
-      text: 'Заголовок',
-      onClick: e => {
-        document.execCommand('formatBlock', false, 'h1')
-      }
-    },
-    {
-      src: '/text.png',
-      text: 'Текст',
-      onClick: e => {
-        document.execCommand('formatBlock', false, 'p')
-      }
-    },
-    {
-      src: '/cursive.png',
-      text: 'Курсив',
-      onClick: e => {
-        document.execCommand('Italic')
-      }
-    },
-    {
-      src: '/underline.png',
-      text: 'Подчеркивание',
-      onClick: e => {
-        document.execCommand('underline')
-      }
-    },
-    {
-      src: '/save.png',
-      text: 'Сохранить',
-      onClick: e => setTextAPI()
-    },
-    {
-      src: '/delete.png',
-      onClick: e => deleteItemAPI()
-    }
-  ], [id]);
 
   const { mutate: addItemAPI } = useMutation({
     mutationFn: async data => await axios.post(`/api/teachersMaterials?teacherID=${userInfo.id}`, { id: Date.now(), value: '' }),
@@ -147,7 +108,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
     },
     retry: 3
   });
-  const { mutate: setTextAPI } = useMutation({
+  const { mutate: setTextAPI, isPending } = useMutation({
     mutationKey: ["text", id, isTeacher ? userInfo.id : teacherID],
     mutationFn: data => {
       return axios.post(`/api/text/${id}?teacherID=${isTeacher ? userInfo.id : teacherID}`, {text: textEditorRef.current.innerHTML}).then(data => data)
@@ -170,6 +131,51 @@ const Materials = ({ setUserInfo, userInfo }) => {
 
     setItemAPI({ id: id, value: { ...data, value: e.target.textContent } });
   }
+
+  
+  const buttonSrcs = useMemo(e => [
+    {
+      src: '/heading.png',
+      text: 'Заголовок',
+      onClick: e => {
+        document.execCommand('formatBlock', false, 'h1')
+      }
+    },
+    {
+      src: '/text.png',
+      text: 'Текст',
+      onClick: e => {
+        document.execCommand('formatBlock', false, 'p')
+      }
+    },
+    {
+      src: '/cursive.png',
+      text: 'Курсив',
+      onClick: e => {
+        document.execCommand('Italic')
+      }
+    },
+    {
+      src: '/underline.png',
+      text: 'Подчеркивание',
+      onClick: e => {
+        document.execCommand('underline')
+      }
+    },
+    {
+      src: '/save.png',
+      text: isPending ? 'Сохраняется' : 'Сохранить',
+      style: {
+        background: '#dae1ea',
+        color: '#dae1ea'
+      },
+      onClick: e => setTextAPI()
+    },
+    {
+      src: '/delete.png',
+      onClick: e => deleteItemAPI()
+    }
+  ], [id, isPending]);
 
   return (
     <div className={presContainer}>
@@ -211,6 +217,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
             <TextEditorTools
               inputs={inputs}
               fontSize={fontSize}
+              isPending={isPending}
               buttonSrcs={buttonSrcs}
               setFontSize={setFontSize}
               positionBtns={positionBtns}
@@ -218,7 +225,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
           ) : (
             <AsideBar
               index={+id}
-              values={teacehrs}
+              values={teachers}
               saveItem={saveItem}
               isTeacher={isTeacher}
               isEditable={isEditable}
