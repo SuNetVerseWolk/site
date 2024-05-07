@@ -1,7 +1,8 @@
-import { Route, Routes, json } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Materials from './pages/Materials'
 import Login from './pages/Login'
 import { useState } from 'react'
+import Singup from './pages/Singup';
 
 function App() {
   const [userInfo, setUserInfo] = useState(localStorage.getItem('info') && JSON.parse(localStorage.getItem('info')));
@@ -13,6 +14,7 @@ function App() {
           <Route path=':teacherID' element={<></>} />
         </Route>
       </Route>
+      <Route path='/singUp' element={<Singup />}></Route>
     </Routes>
   )
 }

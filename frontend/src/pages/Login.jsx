@@ -5,6 +5,7 @@ import { useAnimate } from 'framer-motion'
 import React, { useState } from 'react'
 import styles from 'styles/formStyle.module.css'
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 
 const Login = ({ setUserInfo }) => {
   const [isWarned, setIsWarned] = useState(true);
@@ -61,6 +62,8 @@ const Login = ({ setUserInfo }) => {
           <input name='password' type="password" placeholder='Пароль' required />
 
           <motion.button whileTap={{ scaleX: .85, scaleY: .95 }}>Войти</motion.button>
+
+          <Link className={styles.linkReg} to='singUp'>Зарегистрироваться как студент</Link>
         </div>
 
         <img src="/imageAddition.png" alt="" />

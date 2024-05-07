@@ -92,3 +92,15 @@
     border-radius: 10px;
     box-shadow: #2e2e2e1b 0 7px 10px;
 }
+
+.linkReg {
+    margin-top: 10px;
+    color: #4292dc;
+    font-size: 15px;
+
+    transition: .2s ease-in-out;
+
+    &:hover {
+        color: #000;
+    }
+}

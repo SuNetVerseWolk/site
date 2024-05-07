@@ -1,1 +1,1 @@
-{"text":"<h1 style=\"text-align: center;\">C#</h1><div>c#</div>"}
+{"text":"<h1 style=\"text-align: center;\">C#</h1><div><div>using System;</div><div><br></div><div>class Hello</div><div>{</div><div>&nbsp; &nbsp; static void Main()</div><div>&nbsp; &nbsp; {</div><div>&nbsp; &nbsp; &nbsp; &nbsp; Console.WriteLine(\"Hello, World\");</div><div>&nbsp; &nbsp; }</div><div>}</div></div><div><br></div><div>сосать лошки учите наизусть спрошу</div>"}
