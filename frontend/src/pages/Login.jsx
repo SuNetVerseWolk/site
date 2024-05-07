@@ -14,13 +14,14 @@ const Login = ({ setUserInfo }) => {
 
   const showWarn = async text => {
     if (isWarned) {
-      setIsWarned(false)
+      setIsWarned(false);
       setWarnText(text);
 
-      await animateWarn(warn.current, { y: '100%', scaleY: 1 })
-      setTimeout(e => setWarnText(''), 3000)
-      await animateWarn(warn.current, { y: '0', scaleY: .1 }, { duration: .1, delay: 3, ease: 'easeIn' })
-      setIsWarned(true)
+      await animateWarn(warn.current, { y: '100%', scaleY: 1 });
+      setTimeout(e => setWarnText(''), 3000);
+
+      await animateWarn(warn.current, { y: '0', scaleY: .1 }, { duration: .1, delay: 3, ease: 'easeIn' });
+      setIsWarned(true);
     }
   }
 
@@ -28,20 +29,20 @@ const Login = ({ setUserInfo }) => {
     mutationFn: data => axios.post('/api/logIn', data),
     onSuccess: res => {
       setUserInfo(res.data);
+
       localStorage.setItem('info', JSON.stringify(res.data));
     },
     onError: res => {
       switch (res.response.status) {
         case 404:
-          showWarn('Нет такого пользователя!')
-
+          showWarn('Нет такого пользователя!');
           break;
         case 403:
           showWarn('Пароль неверный!');
           break;
       }
     }
-  })
+  });
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -61,9 +62,9 @@ const Login = ({ setUserInfo }) => {
           <label htmlFor="password">Пароль: <img src="/padlock.png" alt="" /></label>
           <input name='password' type="password" placeholder='Пароль' required />
 
-          <motion.button whileTap={{ scaleX: .85, scaleY: .95 }}>Войти</motion.button>
-
           <Link className={styles.linkReg} to='singUp'>Зарегистрироваться как студент</Link>
+          
+          <motion.button whileTap={{ scaleX: .85, scaleY: .95 }}>Войти</motion.button>
         </div>
 
         <img src="/imageAddition.png" alt="" />
