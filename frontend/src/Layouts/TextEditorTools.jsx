@@ -29,16 +29,13 @@ const TextEditorTools = ({ setFontSize, fontSize, inputs, positionBtns, buttonSr
 			</div>
 
 			{
-				buttonSrcs.map((button, i) => {
-					console.log(button.style, isPending)
-					return (
-						<AddButton
-							key={i}
-							{...button}
-							style={button.style && isPending && button.style}
-						>{button.text}</AddButton>
-					)
-				})
+				buttonSrcs.map((button, i) => (
+					<AddButton
+						key={i}
+						{...button}
+						style={button.style && isPending && button.style}
+					>{button.text}</AddButton>
+				))
 			}
 		</div>
 	)

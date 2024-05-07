@@ -1,6 +1,6 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { editor, textEditor, presContainer } from 'styles/presStyle.module.css'
-import { motion } from 'framer-motion'
+import { calcLength, motion } from 'framer-motion'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -41,9 +41,10 @@ const Materials = ({ setUserInfo, userInfo }) => {
     queryKey: ['teachers'],
     queryFn: e => axios.get('/api/teachers')
       .then(data => {
-        if (!teacherID) {
+        console.log(!teacherID)
+        if (!teacherID || teacherID === 'undefined') {
           console.log(data.data[0].id)
-          navigation(`/${data.data[0].id}/${data.data[0].id}`)
+          navigation(`/${data.data[0].id}/${data.data[0].id}`, {replace: true})
         }
         return data.data
       }
@@ -53,16 +54,16 @@ const Materials = ({ setUserInfo, userInfo }) => {
     queryKey: ['teachersMaterials', isTeacher ? userInfo.id : teacherID],
     queryFn: e => axios.get(`/api/teachersMaterials?teacherID=${isTeacher ? userInfo.id : teacherID}`)
       .then(data => {
-        if (id === teacherID) {
-          navigation(`/${data.data[0].id}/${teacherID}`)
-        } else if(!data.data.find(value => value.id === +id)) {
-          navigation(`/${data.data[0].id}/${teacherID}`)
+        console.clear()
+        console.log('values loading')
+        if (id === teacherID || id === 'undefined') {
+          navigation(`/${data.data[0].id}/${teacherID}`, {replace: true})
         }
 
         return data.data
       }
     ),
-    enabled: isTeacher ? true : !!teachers
+    enabled: teacherID === 'undefined' ? false : isTeacher ? isTeacher : !!teachers
   });
   const { data: text, isLoading: isTextLoading, isFetching } = useQuery({
     queryKey: ['text', id, isTeacher ? userInfo.id : teacherID],
@@ -188,6 +189,12 @@ const Materials = ({ setUserInfo, userInfo }) => {
       onClick: e => deleteItemAPI()
     }
   ], [id, isPending]);
+
+  useEffect(e => {
+    if (!values?.find(value => value.id === +id)) {
+      navigation(`./${values?.[0].id}/${teacherID}`, {replace: true})
+    }
+  }, [teacherID]);
 
   return (
     <div className={presContainer}>
