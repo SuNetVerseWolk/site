@@ -96,6 +96,7 @@
             font-size: 17px;
             color: #000;
             user-select: none;
+            -webkit-user-drag: none;
         }
     
         &:hover:not(.warn),
