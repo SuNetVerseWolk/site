@@ -54,7 +54,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
     queryKey: ['teachersMaterials', isTeacher ? userInfo.id : teacherID],
     queryFn: e => axios.get(`/api/teachersMaterials?teacherID=${isTeacher ? userInfo.id : teacherID}`)
       .then(data => {
-        if (id === teacherID || id === 'undefined') {
+        if (id === teacherID) {
           navigation(`/${data.data[0].id}/${teacherID}`, {replace: true})
         }
 
@@ -189,7 +189,8 @@ const Materials = ({ setUserInfo, userInfo }) => {
   ], [id, isPending]);
 
   useEffect(e => {
-    if (isTeacher || !values?.find(value => value.id === +id)) {
+    if (id === 'undefined' || !values?.find(value => value.id === +id)) {
+      console.log(values?.find(value => value.id === +id))
       navigation(`./${values?.[0].id}/${teacherID}`, {replace: true})
     }
   }, [teacherID, id]);

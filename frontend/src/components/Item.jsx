@@ -12,7 +12,7 @@ const Item = ({ index, teacherID, children, isEditable, setIsEditable, saveChang
 
         linkRef.current.focus();
         linkRef.current.click();
-      }} drag>
+      }}>
       <NavLink to={`./${index}/${teacherID}`} ref={linkRef} contentEditable={isEditable}>{children}</NavLink>
     </motion.div>
   )

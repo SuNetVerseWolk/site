@@ -82,6 +82,7 @@
         text-align: center;
 
         transition: all .2s ease-out;
+        user-select: none;
         
         > a {
             display: flex;
@@ -94,6 +95,7 @@
             text-decoration: none;
             font-size: 17px;
             color: #000;
+            user-select: none;
         }
     
         &:hover:not(.warn),
