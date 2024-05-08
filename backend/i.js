@@ -1,5 +1,3 @@
-const { error } = require('console');
-
 const
 port = process.env.PORT || 3001,
 express = require('express'),
@@ -10,7 +8,7 @@ dataPaths = {
 	teachers: 'teachers',
 	teachersMaterials: 'teachersMaterials'
 },
-{ getData } = require('./getScripts'),
+{ getData, setData } = require('./getScripts'),
 studentsRoute = require('./scripts/students'),
 teachersRoute = require('./scripts/teachers'),
 teachersMaterialsRoute = require('./scripts/teachersMaterials'),
@@ -86,6 +84,27 @@ app.post('/logIn', (req, res) => {
         res.status(403).json(false);
     }
     else res.status(404).json(false);
+})
+app.post('/signUp', (req, res) => {
+	if (req.body.type === 'teacher') {
+		const
+		teachers = getData(dataPaths.teachers),
+		teacher = teachers.find(teacher => teacher.name === req.body.name)
+
+		if (teacher) return res.status(302)
+		if (setData(dataPaths.teachers, teachers.push(req.body))) return res.status(201)
+		return res.status(500)
+	}
+
+	console.log('here')
+	const
+	students = getData(dataPaths.students),
+	student = students.find(student => student.name === req.body.name)
+
+    if (student) return res.status(302)
+	if (req.body.password !== req.body.confirmPassword) return res.status(412)
+	if (setData(dataPaths.students, students.push(req.body))) return res.status(201)
+	return res.status(500)
 })
 
 app.listen(port, e => console.log(`DB keeps on ${port}`));
