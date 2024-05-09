@@ -37,7 +37,6 @@ const Singup = ({ setUserInfo }) => {
 			navigate('/');
 		},
 		onError: res => {
-			console.log(res);
 			switch (res.response.status) {
 				case 500:
 					showWarn('Что-то пошло не так :(');
@@ -55,7 +54,6 @@ const Singup = ({ setUserInfo }) => {
 	const handleSubmit = e => {
 		e.preventDefault();
 
-		console.log('submited')
 		mutate(Object.fromEntries(new FormData(e.target).entries()));
 	}
 

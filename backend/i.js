@@ -62,6 +62,25 @@ app.post('/text/:id', (req, res) => {
 	}
 })
 
+app.post('/user/change', (req, res) => {
+	const
+		userID = +req.query.id,
+		userType = +req.query.type,
+		whatChange = req.body;
+
+	if (userID && userType) {
+		const
+			users = getData(userType),
+			user = users.find(user => user.id === userID);
+
+		if (!user) return res.status(404).json('user not found');
+		Object.keys(whatChange).forEach(key => user[key] = whatChange[key]);
+
+		return res.status(200).json({ id: userID, type: userType });
+	}
+
+	res.status(500).json(false);
+})
 app.post('/logIn', (req, res) => {
 	const
 		teachers = getData(dataPaths.teachers),
@@ -103,7 +122,6 @@ app.post('/signUp', (req, res) => {
 		return res.status(500).json("not added")
 	}
 
-	console.log('here')
 	const
 		students = getData(dataPaths.students),
 		student = students.find(student => student.name === req.body.name)
@@ -114,7 +132,7 @@ app.post('/signUp', (req, res) => {
 		return res.status(200).json({ id: student.id, type: dataPaths.students });
 	}
 	if (setData(dataPaths.students, [...students, user])) return res.status(201).json({ id: user.id, type: dataPaths.students });
-	return res.status(500).json(false);
+	res.status(500).json(false);
 })
 
 app.listen(port, e => console.log(`DB keeps on ${port}`));
