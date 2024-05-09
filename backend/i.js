@@ -1,18 +1,18 @@
 const
-port = process.env.PORT || 3001,
-express = require('express'),
-cors = require('cors'),
-app = express(),
-dataPaths = {
-	students: 'students',
-	teachers: 'teachers',
-	teachersMaterials: 'teachersMaterials'
-},
-{ getData, setData } = require('./getScripts'),
-studentsRoute = require('./scripts/students'),
-teachersRoute = require('./scripts/teachers'),
-teachersMaterialsRoute = require('./scripts/teachersMaterials'),
-fs = require('fs');
+	port = process.env.PORT || 3001,
+	express = require('express'),
+	cors = require('cors'),
+	app = express(),
+	dataPaths = {
+		students: 'students',
+		teachers: 'teachers',
+		teachersMaterials: 'teachersMaterials'
+	},
+	{ getData, setData } = require('./getScripts'),
+	studentsRoute = require('./scripts/students'),
+	teachersRoute = require('./scripts/teachers'),
+	teachersMaterialsRoute = require('./scripts/teachersMaterials'),
+	fs = require('fs');
 
 app.use(cors());
 app.use(express.json({ limit: '100mb' }));
@@ -23,16 +23,16 @@ app.use('/teachers', teachersRoute);
 app.use('/teachersMaterials', teachersMaterialsRoute);
 
 app.get('/text/:id', async (req, res) => {
-    const
-	itemId = +req.params.id,
-	data = getData(dataPaths.teachersMaterials),
-	dataIndex = data.findIndex(data => data.teacherID === +req.query.teacherID),
-	material = data[dataIndex]?.materials.find(material => material.id === itemId);
+	const
+		itemId = +req.params.id,
+		data = getData(dataPaths.teachersMaterials),
+		dataIndex = data.findIndex(data => data.teacherID === +req.query.teacherID),
+		material = data[dataIndex]?.materials.find(material => material.id === itemId);
 	let text = '';
 
 	console.log('textID', material?.textID)
 	if (material?.textID)
-		text = fs.readFileSync(`./data/texts/${material.textID}.txt`, {encoding: 'utf8'});
+		text = fs.readFileSync(`./data/texts/${material.textID}.txt`, { encoding: 'utf8' });
 	else {
 		res.send(500)
 		return;
@@ -44,10 +44,10 @@ app.get('/text/:id', async (req, res) => {
 })
 app.post('/text/:id', (req, res) => {
 	const
-	itemId = +req.params.id,
-	data = getData(dataPaths.teachersMaterials),
-	dataIndex = data.findIndex(data => data.teacherID === +req.query.teacherID),
-	material = data[dataIndex].materials.find(material => material.id === itemId);
+		itemId = +req.params.id,
+		data = getData(dataPaths.teachersMaterials),
+		dataIndex = data.findIndex(data => data.teacherID === +req.query.teacherID),
+		material = data[dataIndex].materials.find(material => material.id === itemId);
 
 	console.log(req.body)
 	if (material.textID && req.body.text)
@@ -64,47 +64,57 @@ app.post('/text/:id', (req, res) => {
 
 app.post('/logIn', (req, res) => {
 	const
-	teachers = getData(dataPaths.teachers),
-	students = getData(dataPaths.students),
-	teacher = teachers.find(teacher => teacher.name === req.body.name),
-	person = teacher ? {
-		...teacher,
-		type: dataPaths.teachers
-	} : {
-		...students.find(student => student.name === req.body.name),
-		type: dataPaths.students
-	};
+		teachers = getData(dataPaths.teachers),
+		students = getData(dataPaths.students),
+		teacher = teachers.find(teacher => teacher.name === req.body.name),
+		person = teacher ? {
+			...teacher,
+			type: dataPaths.teachers
+		} : {
+			...students.find(student => student.name === req.body.name),
+			type: dataPaths.students
+		};
 
-    if (person) {
-        const { id, password, type } = person;
+	if (person) {
+		const { id, password, type } = person;
 
-        if (password === req.body.password)
-            return res.json({ id, type });
+		if (password === req.body.password)
+			return res.json({ id, type });
 
-        res.status(403).json(false);
-    }
-    else res.status(404).json(false);
+		res.status(403).json(false);
+	}
+	else res.status(404).json(false);
 })
 app.post('/signUp', (req, res) => {
+	const bodyKeys = Object.keys(req.body);
+	if (!(bodyKeys.includes('name') && bodyKeys.includes('password') && bodyKeys.includes('confirmPassword'))) {
+		return res.status(400).json(false);
+	}
+	if (req.body.password !== req.body.confirmPassword) return res.status(412).json(false);
+	const user = { name: req.body.name, password: req.body.password, id: Date.now() }
+
 	if (req.body.type === 'teacher') {
 		const
-		teachers = getData(dataPaths.teachers),
-		teacher = teachers.find(teacher => teacher.name === req.body.name)
+			teachers = getData(dataPaths.teachers),
+			teacher = teachers.find(teacher => teacher.name === req.body.name)
 
 		if (teacher) return res.status(302)
-		if (setData(dataPaths.teachers, teachers.push(req.body))) return res.status(201)
-		return res.status(500)
+		if (setData(dataPaths.teachers, teachers.push(user))) return res.status(201).json({ id: user.id, type: dataPaths.teachers });
+		return res.status(500).json("not added")
 	}
 
 	console.log('here')
 	const
-	students = getData(dataPaths.students),
-	student = students.find(student => student.name === req.body.name)
+		students = getData(dataPaths.students),
+		student = students.find(student => student.name === req.body.name)
+	console.log(student);
 
-    if (student) return res.status(302)
-	if (req.body.password !== req.body.confirmPassword) return res.status(412)
-	if (setData(dataPaths.students, students.push(req.body))) return res.status(201)
-	return res.status(500)
+	if (student) {
+		if(student.password !== req.body.password) return res.status(302).json(false);
+		return res.status(200).json({ id: user.id, type: dataPaths.students });
+	}
+	if (setData(dataPaths.students, [...students, user])) return res.status(201).json({ id: user.id, type: dataPaths.students });
+	return res.status(500).json(false);
 })
 
 app.listen(port, e => console.log(`DB keeps on ${port}`));

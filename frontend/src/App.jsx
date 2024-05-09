@@ -14,7 +14,7 @@ function App() {
           <Route path=':teacherID' element={<></>} />
         </Route>
       </Route>
-      <Route path='/singUp' element={<Singup />}></Route>
+      <Route path='/singUp' element={<Singup  setUserInfo={setUserInfo} />}></Route>
     </Routes>
   )
 }
