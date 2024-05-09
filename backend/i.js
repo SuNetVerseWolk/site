@@ -111,7 +111,7 @@ app.post('/signUp', (req, res) => {
 
 	if (student) {
 		if(student.password !== req.body.password) return res.status(302).json(false);
-		return res.status(200).json({ id: user.id, type: dataPaths.students });
+		return res.status(200).json({ id: student.id, type: dataPaths.students });
 	}
 	if (setData(dataPaths.students, [...students, user])) return res.status(201).json({ id: user.id, type: dataPaths.students });
 	return res.status(500).json(false);
