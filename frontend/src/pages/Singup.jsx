@@ -31,7 +31,6 @@ const Singup = ({ setUserInfo }) => {
 	const { mutate } = useMutation({
 		mutationFn: data => axios.post('/api/signUp', data),
 		onSuccess: res => {
-			console.log('success', res.data);
 			setUserInfo(res.data);
 
 			localStorage.setItem('info', JSON.stringify(res.data));
