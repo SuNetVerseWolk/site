@@ -212,7 +212,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
                 open && (
                   <motion.div 
                   initial={{ scale: .80 }}
-                  animate={{ scale: 1 }} hidden={{scale: .80}} className={styles.popup}>
+                  animate={{ scale: 1 }} className={styles.popup}>
                     {/* <label htmlFor="name">ФИО</label> */}
                     <input id='name' type="text" placeholder='ФИО' />
       
