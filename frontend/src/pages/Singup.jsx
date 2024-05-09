@@ -68,7 +68,7 @@ const Singup = ({ setUserInfo }) => {
                     <input name='password' id='password' type="password" placeholder='Пароль' required />
 
                     <label htmlFor="confirmPassword">Повторить пароль: <img src="/padlock.png" alt="" /></label>
-                    <input name='confirmPassword' id='confirmPassword' type="confirmPassword" placeholder='Повторный пароль' required />
+                    <input name='confirmPassword' id='confirmPassword' type="password" placeholder='Повторный пароль' required />
 
                     <motion.button whileTap={{ scaleX: .85, scaleY: .95 }}>Зарегистрироваться</motion.button>
                 </div>

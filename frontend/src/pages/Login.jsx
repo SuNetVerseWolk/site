@@ -57,10 +57,10 @@ const Login = ({ setUserInfo }) => {
           <h1>Вход</h1>
 
           <label htmlFor="name">ФИО: <img src="/user.png" alt="" /></label>
-          <input name='name' type="text" placeholder='Фамилия Имя Отчество' required />
+          <input name='name' id='name' type="text" placeholder='Фамилия Имя Отчество' required />
 
           <label htmlFor="password">Пароль: <img src="/padlock.png" alt="" /></label>
-          <input name='password' type="password" placeholder='Пароль' required />
+          <input name='password' id='password' type="password" placeholder='Пароль' required />
 
           <Link className={styles.linkReg} to='singUp'>Зарегистрироваться как студент</Link>
           

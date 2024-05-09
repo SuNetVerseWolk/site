@@ -8,6 +8,7 @@ import TextEditor from 'src/Layouts/TextEditor'
 import { useMutation } from '@tanstack/react-query'
 import AsideBar from 'src/Layouts/AsideBar'
 import TextEditorTools from 'src/Layouts/TextEditorTools'
+import styles from 'styles/presStyle.module.css';
 
 const Materials = ({ setUserInfo, userInfo }) => {
   const textEditorRef = useRef();
@@ -17,6 +18,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
   const isTeacher = useMemo(e => userInfo.type === 'teachers', [userInfo.type]);
   const [fontSize, setFontSize] = useState('');
   const navigation = useNavigate();
+  const [open, setIsOpened] = useState(false);
 
   const inputs = useMemo(e => [
     {
@@ -43,8 +45,9 @@ const Materials = ({ setUserInfo, userInfo }) => {
       .then(data => {
         console.log(!teacherID)
         if (!teacherID || teacherID === 'undefined') {
-          console.log(data.data[0].id)
-          navigation(`/${data.data[0].id}/${data.data[0].id}`, {replace: true})
+          // console.log(data.data[0].id)
+
+          navigation(`/${data.data[0].id}/${data.data[0].id}`, {replace: true});
         }
         return data.data
       }
@@ -55,10 +58,10 @@ const Materials = ({ setUserInfo, userInfo }) => {
     queryFn: e => axios.get(`/api/teachersMaterials?teacherID=${isTeacher ? userInfo.id : teacherID}`)
       .then(data => {
         if (id === teacherID) {
-          navigation(`/${data.data[0].id}/${teacherID}`, {replace: true})
+          navigation(`/${data.data[0].id}/${teacherID}`, {replace: true});
         }
 
-        return data.data
+        return data.data;
       }
     ),
     enabled: teacherID === 'undefined' ? false : isTeacher ? isTeacher : !!teachers
@@ -67,7 +70,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
     queryKey: ['text', id, isTeacher ? userInfo.id : teacherID],
     queryFn: e => axios.get(`/api/text/${id}?teacherID=${isTeacher ? userInfo.id : teacherID}`)
       .then(data => {
-        return data.data.text
+        return data.data.text;
       }
     ),
     enabled: !!values
@@ -92,10 +95,9 @@ const Materials = ({ setUserInfo, userInfo }) => {
   const { mutate: addItemAPI } = useMutation({
     mutationFn: async data => await axios.post(`/api/teachersMaterials?teacherID=${userInfo.id}`, { id: Date.now(), value: '' }),
     onSuccess: res => {
-      queryClient.invalidateQueries(['teachersMaterials'])
+      queryClient.invalidateQueries(['teachersMaterials']);
     },
-    onError: res => {
-    },
+    onError: res => { },
     retry: 3
   });
   const { mutate: setItemAPI } = useMutation({
@@ -104,7 +106,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
       setIsEditable(false);
     },
     onSuccess: res => {
-      queryClient.invalidateQueries(['teachersMaterials'])
+      queryClient.invalidateQueries(['teachersMaterials']);
     },
     onError: res => { }
   });
@@ -115,17 +117,16 @@ const Materials = ({ setUserInfo, userInfo }) => {
     onSuccess: res => {
       queryClient.invalidateQueries(['teachersMaterials'])
     },
-    onError: res => {
-    },
+    onError: res => { },
     retry: 3
   });
   const { mutate: setTextAPI, isPending } = useMutation({
     mutationKey: ["text", id, isTeacher ? userInfo.id : teacherID],
     mutationFn: data => {
-      return axios.post(`/api/text/${id}?teacherID=${isTeacher ? userInfo.id : teacherID}`, {text: textEditorRef.current.innerHTML}).then(data => data)
+      return axios.post(`/api/text/${id}?teacherID=${isTeacher ? userInfo.id : teacherID}`, {text: textEditorRef.current.innerHTML}).then(data => data);
     },
     onSuccess: res => {
-      queryClient.invalidateQueries(['text', res.id, isTeacher ? userInfo.id : teacherID])
+      queryClient.invalidateQueries(['text', res.id, isTeacher ? userInfo.id : teacherID]);
     },
     retry: 3
   });
@@ -138,7 +139,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
 
   const saveItem = (e, id) => {
     const data = values.find(data => data.id === +id);
-    console.log({ id: id, value: { ...data, value: e.target.textContent } })
+    // console.log({ id: id, value: { ...data, value: e.target.textContent } })
 
     setItemAPI({ id: id, value: { ...data, value: e.target.textContent } });
   }
@@ -149,28 +150,28 @@ const Materials = ({ setUserInfo, userInfo }) => {
       src: '/heading.png',
       text: 'Заголовок',
       onClick: e => {
-        document.execCommand('formatBlock', false, 'h1')
+        document.execCommand('formatBlock', false, 'h1');
       }
     },
     {
       src: '/text.png',
       text: 'Текст',
       onClick: e => {
-        document.execCommand('formatBlock', false, 'p')
+        document.execCommand('formatBlock', false, 'p');
       }
     },
     {
       src: '/cursive.png',
       text: 'Курсив',
       onClick: e => {
-        document.execCommand('Italic')
+        document.execCommand('Italic');
       }
     },
     {
       src: '/underline.png',
       text: 'Подчеркивание',
       onClick: e => {
-        document.execCommand('underline')
+        document.execCommand('underline');
       }
     },
     {
@@ -190,8 +191,9 @@ const Materials = ({ setUserInfo, userInfo }) => {
 
   useEffect(e => {
     if (id === 'undefined' || !values?.find(value => value.id === +id)) {
-      console.log(values?.find(value => value.id === +id))
-      navigation(`./${values?.[0].id}/${teacherID}`, {replace: true})
+      // console.log(values?.find(value => value.id === +id))
+
+      navigation(`./${values?.[0].id}/${teacherID}`, {replace: true});
     }
   }, [teacherID, id]);
 
@@ -201,7 +203,27 @@ const Materials = ({ setUserInfo, userInfo }) => {
         <h1>Материал для обучения</h1>
 
         <div>
-          <p>{userData.data?.name}</p>
+          <div>
+            <button className={styles.name} onClick={e => open ? setIsOpened(false) : setIsOpened(true)}>
+              {userData.data?.name}
+            </button>
+
+            {
+                open && (
+                  <motion.div 
+                  initial={{ scale: .80 }}
+                  animate={{ scale: 1 }} hidden={{scale: .80}} className={styles.popup}>
+                    {/* <label htmlFor="name">ФИО</label> */}
+                    <input id='name' type="text" placeholder='ФИО' />
+      
+                    {/* <label htmlFor="password">Пароль</label> */}
+                    <input id='password' type="text" placeholder='Пароль' />
+      
+                    <motion.button whileTap={{ scaleX: .85, scaleY: .95 }}>Изменить</motion.button>
+                  </motion.div>
+                )
+              }
+          </div>
 
           <motion.button whileTap={{ scaleX: .85, scaleY: .95 }} onClick={exit}><img src="/logout.png" alt="..." /></motion.button>
         </div>
