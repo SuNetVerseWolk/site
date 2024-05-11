@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { editor, textEditor, presContainer } from 'styles/presStyle.module.css'
-import { calcLength, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -9,6 +9,7 @@ import { useMutation } from '@tanstack/react-query'
 import AsideBar from 'src/Layouts/AsideBar'
 import TextEditorTools from 'src/Layouts/TextEditorTools'
 import styles from 'styles/presStyle.module.css';
+import Popup from 'components/Popup'
 
 const Materials = ({ setUserInfo, userInfo }) => {
 	const textEditorRef = useRef();
@@ -201,21 +202,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
 							{userData.data?.name}
 						</button>
 
-						{
-							open && (
-								<motion.div
-									initial={{ scale: .80 }}
-									animate={{ scale: 1 }} className={styles.popup}>
-									{/* <label htmlFor="name">ФИО</label> */}
-									<input id='name' type="text" placeholder='ФИО' />
-
-									{/* <label htmlFor="password">Пароль</label> */}
-									<input id='password' type="text" placeholder='Пароль' />
-
-									<motion.button whileTap={{ scaleX: .85, scaleY: .95 }}>Изменить</motion.button>
-								</motion.div>
-							)
-						}
+						{ open && <Popup /> }
 					</div>
 
 					<motion.button whileTap={{ scaleX: .85, scaleY: .95 }} onClick={exit}><img src="/logout.png" alt="..." /></motion.button>
