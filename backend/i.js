@@ -65,7 +65,7 @@ app.post('/text/:id', (req, res) => {
 app.post('/user/change', (req, res) => {
 	const
 		userID = +req.query.id,
-		userType = +req.query.type,
+		userType = req.query.type,
 		whatChange = req.body;
 
 	if (userID && userType) {
@@ -74,9 +74,11 @@ app.post('/user/change', (req, res) => {
 			user = users.find(user => user.id === userID);
 
 		if (!user) return res.status(404).json('user not found');
+
 		Object.keys(whatChange).forEach(key => user[key] = whatChange[key]);
 
-		return res.status(200).json({ id: userID, type: userType });
+		if (setData(userType, users))
+			return res.status(200).json({ id: userID, type: userType });
 	}
 
 	res.status(500).json(false);
@@ -84,17 +86,24 @@ app.post('/user/change', (req, res) => {
 app.post('/logIn', (req, res) => {
 	const
 		teachers = getData(dataPaths.teachers),
-		students = getData(dataPaths.students),
-		teacher = teachers.find(teacher => teacher.name === req.body.name),
-		person = teacher ? {
+		teacher = teachers.find(teacher => teacher.name === req.body.name);
+	let person = undefined;
+
+	if (!!teacher) {
+		person = {
 			...teacher,
 			type: dataPaths.teachers
-		} : {
-			...students.find(student => student.name === req.body.name),
-			type: dataPaths.students
-		};
+		}
+	} else {
+		const student = getData(dataPaths.students).find(student => student.name === req.body.name);
 
-	if (person) {
+		person = student ? {
+			...student,
+			type: dataPaths.students
+		} : undefined;
+	}
+
+	if (!!person) {
 		const { id, password, type } = person;
 
 		if (password === req.body.password)

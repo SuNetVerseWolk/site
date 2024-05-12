@@ -202,7 +202,9 @@ const Materials = ({ setUserInfo, userInfo }) => {
 							{userData.data?.name}
 						</button>
 
-						{ open && <Popup /> }
+						{ open && (
+							<Popup userInfo={userInfo} userName={userData.data?.name} setIsOpen={setIsOpened} />
+						)}
 					</div>
 
 					<motion.button whileTap={{ scaleX: .85, scaleY: .95 }} onClick={exit}><img src="/logout.png" alt="..." /></motion.button>
