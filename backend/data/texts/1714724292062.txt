@@ -1,1 +1,1 @@
-{"text":"<h1 style=\"text-align: center;\">React</h1><div>react</div>"}
+{"text":"<h1 style=\"text-align: center;\">React</h1>"}
