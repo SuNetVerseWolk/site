@@ -20,6 +20,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
 	const [fontSize, setFontSize] = useState('');
 	const navigate = useNavigate();
 	const [open, setIsOpened] = useState(false);
+	const [amountChanged, setAmountChanged] = useState(false);
 
 	const inputs = useMemo(e => [
 		{
@@ -58,6 +59,9 @@ const Materials = ({ setUserInfo, userInfo }) => {
 				if (id === teacherID)
 					navigate(`/${data.data[0].id}/${teacherID}`, { replace: true });
 
+				if (values.length !== data.data.length)
+					navigate(`/${data.data[data.data.length - 1].id}/${teacherID}`, { replace: true });
+
 				return data.data;
 			}
 			),
@@ -68,8 +72,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
 		queryFn: e => axios.get(`/api/text/${id}?teacherID=${isTeacher ? userInfo.id : teacherID}`)
 			.then(data => {
 				return data.data.text;
-			}
-			),
+			}),
 		enabled: !!values
 	});
 	const positionBtns = useMemo(e => [
@@ -92,7 +95,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
 	const { mutate: addItemAPI } = useMutation({
 		mutationFn: async data => await axios.post(`/api/teachersMaterials?teacherID=${userInfo.id}`, { id: Date.now(), value: '' }),
 		onSuccess: res => {
-			queryClient.invalidateQueries(['teachersMaterials']);
+			queryClient.invalidateQueries(['teachersMaterials', isTeacher ? userInfo.id : teacherID]);
 		},
 		onError: res => { },
 		retry: 3
@@ -112,7 +115,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
 			return await axios.delete(`/api/teachersMaterials/${id}?teacherID=${userInfo.id}`).then(data => data)
 		},
 		onSuccess: res => {
-			queryClient.invalidateQueries(['teachersMaterials'])
+			queryClient.invalidateQueries(['teachersMaterials', isTeacher ? userInfo.id : teacherID])
 		},
 		onError: res => { },
 		retry: 3
@@ -136,7 +139,6 @@ const Materials = ({ setUserInfo, userInfo }) => {
 
 	const saveItem = (e, id) => {
 		const data = values.find(data => data.id === +id);
-		// console.log({ id: id, value: { ...data, value: e.target.textContent } })
 
 		setItemAPI({ id: id, value: { ...data, value: e.target.textContent } });
 	}
