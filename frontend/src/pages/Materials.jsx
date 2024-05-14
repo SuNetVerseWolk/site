@@ -61,9 +61,11 @@ const Materials = ({ setUserInfo, userInfo }) => {
 				if (values && values.length !== data.data.length)
 					navigate(`/${data.data[data.data.length - 1].id}/${teacherID}`, { replace: true });
 
+				if (!values && isTeacher)
+					navigate(`/${data.data[0].id}/undefined`, { replace: true });
+
 				return data.data;
-			}
-			),
+			}),
 		enabled: isTeacher || !!teachers
 	});
 	const { data: text, isLoading: isTextLoading, isFetching } = useQuery({
@@ -190,7 +192,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
 
 	useEffect(e => {
 		if ((!teacherID || teacherID === 'undefined') && !id || !values?.find(value => value.id === +id))
-			navigate(`./${values?.[0].id}/${teacherID || isTeacher ? teacherID : teachers[0].id}`, { replace: true });
+			navigate(`./${values?.[0].id}/${teacherID || isTeacher ? teacherID : teachers?.[0].id}`, { replace: true });
 	}, [teacherID, id]);
 
 	return (
