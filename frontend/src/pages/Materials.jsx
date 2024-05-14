@@ -20,7 +20,6 @@ const Materials = ({ setUserInfo, userInfo }) => {
 	const [fontSize, setFontSize] = useState('');
 	const navigate = useNavigate();
 	const [open, setIsOpened] = useState(false);
-	const [amountChanged, setAmountChanged] = useState(false);
 
 	const inputs = useMemo(e => [
 		{
@@ -45,7 +44,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
 		queryKey: ['teachers'],
 		queryFn: e => axios.get('/api/teachers')
 			.then(data => {
-				if (!teacherID || teacherID === 'undefined')
+				if (!teacherID)
 					navigate(`/${data.data[0].id}/${data.data[0].id}`, { replace: true });
 
 				return data.data
@@ -56,6 +55,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
 		queryKey: ['teachersMaterials', isTeacher ? userInfo.id : teacherID],
 		queryFn: e => axios.get(`/api/teachersMaterials?teacherID=${isTeacher ? userInfo.id : teacherID}`)
 			.then(data => {
+				console.log(1)
 				if (!isTeacher)
 					navigate(`/${data.data[0].id}/${teacherID}`, { replace: true });
 
@@ -190,8 +190,8 @@ const Materials = ({ setUserInfo, userInfo }) => {
 	], [id, isPending]);
 
 	useEffect(e => {
-		if (!id || !values?.find(value => value.id === +id))
-			navigate(`./${values?.[0].id}/${teacherID}`, { replace: true });
+		if ((!teacherID || teacherID === 'undefined') && !id || !values?.find(value => value.id === +id))
+			navigate(`./${values?.[0].id}/${teacherID || isTeacher ? teacherID : teachers[0].id}`, { replace: true });
 	}, [teacherID, id]);
 
 	return (
