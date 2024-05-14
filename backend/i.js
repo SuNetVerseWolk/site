@@ -140,4 +140,4 @@ app.post('/signUp', (req, res) => {
 	res.status(500).json(false);
 })
 
-app.listen(port, e => console.log(`DB keeps on ${port}`));
+app.listen(port, e => console.log(`Запущено!!!`));

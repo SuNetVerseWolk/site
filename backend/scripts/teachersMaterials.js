@@ -35,7 +35,6 @@ router.post('/', (req, res) => {
         if (setTeachersMaterials(data)) {
             fs.writeFile(`./data/texts/${item.textID}.txt`, JSON.stringify(defaultData), { encoding: 'utf8' }, error => {
                 if (error) {
-                    console.log(error)
                     res.status(500).json(newItem);
                     return;
                 }
@@ -76,7 +75,6 @@ router.delete('/:id', (req, res) => {
 
     fs.unlink(`./data/texts/${data[dataIndex].materials[teachersMaterialIndex].textID}.txt`, error => {
         if (error) {
-            console.log(error)
             res.status(500).json(false);
             return;
         }
