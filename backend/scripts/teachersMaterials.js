@@ -1,5 +1,3 @@
-const { error } = require('console');
-
 const
     express = require('express'),
     getData = require('./getData'),

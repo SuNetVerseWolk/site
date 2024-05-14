@@ -6,7 +6,6 @@ const setData = (filePath, data) => {
 	data = JSON.stringify(data);
 
 	if (!data) return false
-	// console.log(true)
 
 	fs.writeFileSync(
 		path.join(__dirname, '../data', filePath + '.json'),

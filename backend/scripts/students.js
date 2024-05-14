@@ -16,7 +16,6 @@ router.get('/:id', (req, res) => {
 	person = people.find(p => p.id === +req.params.id),
 	{name} = person;
 
-	console.log('students')
 	if (person) return res.json({name})
 
 	res.status(404).json(false);

@@ -36,7 +36,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
 		}
 	], []);
 
-	const userData = useQuery({
+	const { data: userData, isLoading: userDataIsLoading } = useQuery({
 		queryKey: [userInfo.type, userInfo.id],
 		queryFn: e => axios.get(`/api/${userInfo.type}/${userInfo.id}`).then(data => data.data)
 	});
@@ -203,11 +203,11 @@ const Materials = ({ setUserInfo, userInfo }) => {
 				<div>
 					<div>
 						<button className={styles.name} onClick={e => open ? setIsOpened(false) : setIsOpened(true)}>
-							{userData.data?.name}
+							{userDataIsLoading ? 'Загрузка...' : userData?.name}
 						</button>
 
 						{ open && (
-							<Popup userInfo={userInfo} userName={userData.data?.name} setIsOpen={setIsOpened} />
+							<Popup userInfo={userInfo} userName={userData?.name} setIsOpen={setIsOpened} />
 						)}
 					</div>
 
