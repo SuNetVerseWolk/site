@@ -49,23 +49,23 @@ const Materials = ({ setUserInfo, userInfo }) => {
 					navigate(`/${data.data[0].id}/${data.data[0].id}`, { replace: true });
 
 				return data.data
-			}
-			)
+			}),
+		enabled: !isTeacher
 	});
 	const { data: values, isLoading } = useQuery({
 		queryKey: ['teachersMaterials', isTeacher ? userInfo.id : teacherID],
 		queryFn: e => axios.get(`/api/teachersMaterials?teacherID=${isTeacher ? userInfo.id : teacherID}`)
 			.then(data => {
-				if (id === teacherID)
+				if (!isTeacher)
 					navigate(`/${data.data[0].id}/${teacherID}`, { replace: true });
 
-				if (values.length !== data.data.length)
+				if (values && values.length !== data.data.length)
 					navigate(`/${data.data[data.data.length - 1].id}/${teacherID}`, { replace: true });
 
 				return data.data;
 			}
 			),
-		enabled: teacherID === 'undefined' ? false : isTeacher ? isTeacher : !!teachers
+		enabled: isTeacher || !!teachers
 	});
 	const { data: text, isLoading: isTextLoading, isFetching } = useQuery({
 		queryKey: ['text', id, isTeacher ? userInfo.id : teacherID],
@@ -135,6 +135,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
 		setUserInfo('');
 
 		localStorage.setItem('info', '');
+		navigate('')
 	}
 
 	const saveItem = (e, id) => {
@@ -189,7 +190,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
 	], [id, isPending]);
 
 	useEffect(e => {
-		if (id === 'undefined' || !values?.find(value => value.id === +id))
+		if (!id || !values?.find(value => value.id === +id))
 			navigate(`./${values?.[0].id}/${teacherID}`, { replace: true });
 	}, [teacherID, id]);
 

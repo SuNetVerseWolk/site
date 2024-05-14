@@ -54,7 +54,7 @@ const Login = ({ setUserInfo }) => {
     <div className={styles.container}>
       <form onSubmit={handleSubmit}>
         <div>
-          <h1>Вход</h1>
+          <h1>Авторизация</h1>
 
           <label htmlFor="name">ФИО: <img src="/user.png" alt="" /></label>
           <input name='name' id='name' type="text" placeholder='Фамилия Имя Отчество' required />
