@@ -55,7 +55,6 @@ const Materials = ({ setUserInfo, userInfo }) => {
 		queryKey: ['teachersMaterials', isTeacher ? userInfo.id : teacherID],
 		queryFn: e => axios.get(`/api/teachersMaterials?teacherID=${isTeacher ? userInfo.id : teacherID}`)
 			.then(data => {
-				console.log(1)
 				if (!isTeacher)
 					navigate(`/${data.data[0].id}/${teacherID}`, { replace: true });
 
