@@ -9,7 +9,7 @@ import { useMutation } from '@tanstack/react-query'
 import AsideBar from 'src/Layouts/AsideBar'
 import TextEditorTools from 'src/Layouts/TextEditorTools'
 import styles from 'styles/presStyle.module.css';
-import Popup from 'components/Popup'
+import Popup from 'src/Layouts/Popup'
 
 const Materials = ({ setUserInfo, userInfo }) => {
 	const textEditorRef = useRef();
@@ -207,11 +207,11 @@ const Materials = ({ setUserInfo, userInfo }) => {
 						</button>
 
 						{ open && (
-							<Popup userInfo={userInfo} userName={userData?.name} setIsOpen={setIsOpened} />
+							<Popup userInfo={userInfo} userName={userData?.name} setIsOpen={setIsOpened} isTeacher={isTeacher} exit={exit} />
 						)}
 					</div>
 
-					<motion.button whileTap={{ scaleX: .85, scaleY: .95 }} onClick={exit}><img src="/logout.png" alt="..." /></motion.button>
+					<motion.button className={styles.button} whileTap={{ scaleX: .85, scaleY: .95 }} onClick={exit}><img src="/logout.png" alt="..." /></motion.button>
 				</div>
 			</header>
 
