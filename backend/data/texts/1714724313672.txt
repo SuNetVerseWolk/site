@@ -1,1 +1,0 @@
-{"text":"<h1 style=\"text-align: center;\">JS</h1><div><img class=\"MMImage-Origin\" src=\"https://avatars.mds.yandex.net/i?id=711bde04e7d6516c88f3b3cdd404a885_l-4483167-images-thumbs&amp;n=13\" alt=\"Picture background\" aria-hidden=\"true\"><br></div>"}
