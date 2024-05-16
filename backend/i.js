@@ -72,7 +72,10 @@ app.post('/user/change', (req, res) => {
 
 		if (!user) return res.status(404).json('user not found');
 
-		Object.keys(whatChange).forEach(key => user[key] = whatChange[key]);
+		Object.keys(whatChange).forEach(key => {
+			if (key !== 'password' || (key === 'password' && !!whatChange[key]))
+				user[key] = whatChange[key]
+		});
 
 		if (setData(userType, users))
 			return res.status(200).json({ id: userID, type: userType });
