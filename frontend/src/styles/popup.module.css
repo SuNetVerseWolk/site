@@ -1,86 +1,71 @@
 .popup {
     display: flex;
     flex-flow: column;
-
     position: absolute;
     right: 10px;
     top: 35px;
     z-index: 5;
-
     box-shadow: #2e2e2e36 0 2px 10px;
     background: #ffffff;
     border-radius: 10px;
     margin: 10px;
     padding: 20px;
-
-    &::before {
-        content: '';
-        position: absolute;
-        top: -20px;
-        right: 50px;
-
-        width: 30px;
-        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-        height: 20px;
-        background: #8b8b8b29;
-    }
-    
-    input,
-    button {
-        font-size: 15px;
-    }
-    input {
-        border: none;
-        border-bottom: #00000080 1.5px solid;
-        padding: 10px;
-        width: 300px;
-    }
-
-    .button {
-        display: grid;
-        grid-template-columns: 85% 15%;
-        gap: 0;
-
-        height: 20%;
-        margin-top: 10px;
-        border-radius: 7px;
-        overflow: hidden;
-
-        
-        &:not(:has(.deleteButton)) {
-            display: block;
-
-            button {
-                width: 100%;
-            }
-        }
-
-        button {
-            height: 100%;
-            background: #6dabe4;
-            color: #fffffff6;
-            padding: 10px;
-            border: none;
-
-            &:hover {
-                background: #4292dc;
-            }
-        }
-
-        .deleteButton {
-            height: auto;
-            background: #e46d6d;
-            aspect-ratio: 1;
-            
-            &:hover {
-                background: #dc4242;
-            }
-
-            img {
-                height: 20px;
-                aspect-ratio: 1;
-                filter: brightness(0) invert(1);
-            }
-        }
-    }
-}
+  }
+  .popup::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: 50px;
+    width: 30px;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    height: 20px;
+    background: #8b8b8b29;
+  }
+  .popup input, .popup button {
+    font-size: 15px;
+  }
+  .popup input {
+    border: none;
+    border-bottom: #00000080 1.5px solid;
+    padding: 10px;
+    width: 300px;
+  }
+  .popup .button {
+    display: grid;
+    grid-template-columns: 85% 15%;
+    gap: 0;
+    height: 20%;
+    margin-top: 10px;
+    border-radius: 7px;
+    overflow: hidden;
+  }
+  .popup .button:not(:has(.deleteButton)) {
+    display: block;
+  }
+  .popup .button:not(:has(.deleteButton)) button {
+    width: 100%;
+  }
+  .popup .button button {
+    height: 100%;
+    background: #6dabe4;
+    color: #fffffff6;
+    padding: 10px;
+    border: none;
+  }
+  .popup .button button:hover {
+    background: #4292dc;
+  }
+  .popup .button .deleteButton {
+    height: auto;
+    background: #e46d6d;
+    aspect-ratio: 1;
+  }
+  .popup .button .deleteButton:hover {
+    background: #dc4242;
+  }
+  .popup .button .deleteButton img {
+    height: 20px;
+    aspect-ratio: 1;
+    filter: brightness(0) invert(1);
+  }
+  
