@@ -31,7 +31,6 @@ app.get('/text/:id', async (req, res) => {
 		material = data[dataIndex]?.materials.find(material => material.id === itemId);
 	let text = '';
 
-	console.log('textID', material?.textID)
 	if (material?.textID)
 		text = fs.readFileSync(`./data/texts/${material.textID}.txt`, { encoding: 'utf8' });
 	else {
@@ -39,7 +38,6 @@ app.get('/text/:id', async (req, res) => {
 		return;
 	}
 
-	console.log(text)
 	if (text) res.json(JSON.parse(text))
 	else res.status(404)
 })
@@ -50,7 +48,6 @@ app.post('/text/:id', (req, res) => {
 		dataIndex = data.findIndex(data => data.teacherID === +req.query.teacherID),
 		material = data[dataIndex].materials.find(material => material.id === itemId);
 
-	console.log(req.body)
 	if (material.textID && req.body.text)
 		fs.writeFile(`./data/texts/${material.textID}.txt`, JSON.stringify(req.body), error => {
 			if (error) res.status(500)
@@ -76,7 +73,10 @@ app.post('/user/change', (req, res) => {
 
 		if (!user) return res.status(404).json('user not found');
 
-		Object.keys(whatChange).forEach(key => user[key] = whatChange[key]);
+		Object.keys(whatChange).forEach(key => {
+			if (key !== 'password' || (key === 'password' && !!whatChange[key]))
+				user[key] = whatChange[key]
+		});
 
 		if (setData(userType, users))
 			return res.status(200).json({ id: userID, type: userType });
@@ -145,7 +145,6 @@ app.post('/signUp', (req, res) => {
 	const
 		students = getData(dataPaths.students),
 		student = students.find(student => student.name === req.body.name)
-	console.log(student);
 
 	if (student) {
 		if(student.password !== req.body.password) return res.status(302).json(false);
@@ -155,4 +154,4 @@ app.post('/signUp', (req, res) => {
 	res.status(500).json(false);
 })
 
-app.listen(port, e => console.log(`DB keeps on ${port}`));
+app.listen(port, e => console.log(`Запущено!!!`));

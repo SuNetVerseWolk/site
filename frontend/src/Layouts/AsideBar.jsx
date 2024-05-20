@@ -1,7 +1,7 @@
 import Item from 'components/Item'
 import { motion } from 'framer-motion'
 import React from 'react'
-import { asideBar, warn } from 'styles/presStyle.module.css'
+import { asideBar, warn } from 'styles/asideBar.module.css'
 
 const AsideBar = ({
 	index,

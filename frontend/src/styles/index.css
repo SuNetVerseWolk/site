@@ -6,37 +6,29 @@
   outline: none;
   list-style-type: none;
 }
-
-#root,
-body {
+#root, body {
   overflow: hidden;
   height: 100svh;
 }
-
 button {
   cursor: pointer;
 }
-
 #activeItem:has(a.active) {
   box-shadow: #4292dc69 0 2px 10px;
-
-  &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -15px;
-      translate: 0 20%;
-      scale: 0;
-
-      height: 70%;
-      width: 5px;
-      border-radius: 30px;
-      background: #6dabe4;
-
-      animation: appear .3s forwards;
-  }
 }
-
+#activeItem:has(a.active)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -15px;
+  translate: 0 20%;
+  scale: 0;
+  height: 70%;
+  width: 5px;
+  border-radius: 30px;
+  background: #6dabe4;
+  animation: appear 0.3s forwards;
+}
 @keyframes appear {
   to {
     scale: 1;
