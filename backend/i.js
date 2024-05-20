@@ -21,6 +21,7 @@ app.use(express.static('./data/uploads/'));
 app.use('/students', studentsRoute);
 app.use('/teachers', teachersRoute);
 app.use('/teachersMaterials', teachersMaterialsRoute);
+require('dotenv').config();
 
 app.get('/text/:id', async (req, res) => {
 	const
@@ -84,6 +85,16 @@ app.post('/user/change', (req, res) => {
 	res.status(500).json(false);
 })
 app.post('/logIn', (req, res) => {
+	console.log(
+		req.body.name, process.env.ADMIN_NAME
+		,
+		req.body.password, process.env.ADMIN_PASSWORD);
+	if (
+		req.body.name === process.env.ADMIN_NAME
+		&&
+		req.body.password === process.env.ADMIN_PASSWORD
+	) return res.json({ id: process.env.ADMIN_ID, type: process.env.ADMIN_ID });
+
 	const
 		teachers = getData(dataPaths.teachers),
 		teacher = teachers.find(teacher => teacher.name === req.body.name);
