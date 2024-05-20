@@ -1,0 +1,100 @@
+.container {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    border-radius: 10px;
+    background: #f8f8f8;
+  }
+  .container form {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 500px;
+    height: 450px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: #2e2e2e1b 0 7px 10px;
+    overflow: hidden;
+  }
+  .container form *:not(.container div button, .container div) {
+    margin-inline: 20px;
+  }
+  .container form h1 {
+    font-size: 45px;
+    font-family: Dancing Script;
+    margin-bottom: 15px;
+    margin-top: 45px;
+  }
+  .container form label {
+    position: relative;
+  }
+  .container form label img {
+    position: absolute;
+    top: 30px;
+    left: -17px;
+    width: 15px;
+    height: 15px;
+  }
+  .container form input, .container form label, .container form button {
+    font-size: 15px;
+  }
+  .container form input {
+    border: none;
+    border-bottom: #00000080 1.5px solid;
+    padding: 7px 35px;
+    margin-bottom: 15px;
+    font-size: 15px;
+  }
+  .container form button:not(.container div button) {
+    width: 200px;
+    padding: 10px;
+    color: #fffffff6;
+    border-radius: 7px;
+    border: none;
+    margin-top: 10px;
+  }
+  .add {
+    background: #6dabe4;
+  }
+  .add:hover {
+    background: #4292dc;
+  }
+  .container img {
+    width: 60%;
+    height: 100%;
+    border-radius: 100px;
+    margin-left: 20px;
+  }
+  .delete {
+    background: #e46d6d;
+  }
+  .delete:hover {
+    background: #dc4242;
+  }
+  .container div {
+    margin-top: 30px;
+    height: 65px;
+  }
+  .container div button {
+    height: 100%;
+    width: 50%;
+    border: none;
+    background: #6dabe4;
+    color: #fffffff6;
+    position: relative;
+    transition: all .3s ease-in-out;
+  }
+  .container div button:hover {
+    background: #fff;
+    color: #000;
+  }
+  .container div button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #6dabe4;
+  }
+  

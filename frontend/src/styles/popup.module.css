@@ -2,7 +2,7 @@
     display: flex;
     flex-flow: column;
     position: absolute;
-    right: 10px;
+    right: -15px;
     top: 35px;
     z-index: 5;
     box-shadow: #2e2e2e36 0 2px 10px;

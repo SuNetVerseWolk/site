@@ -145,7 +145,6 @@ const Materials = ({ setUserInfo, userInfo }) => {
 		setItemAPI({ id: id, value: { ...data, value: e.target.textContent } });
 	}
 
-
 	const buttonSrcs = useMemo(e => [
 		{
 			src: '/heading.png',
