@@ -55,18 +55,6 @@
     border: none;
     margin-top: 10px;
   }
-  .add {
-    background: #6dabe4;
-  }
-  .add:hover {
-    background: #4292dc;
-  }
-  /* .container img {
-    width: 60%;
-    height: 100%;
-    border-radius: 100px;
-    margin-left: 20px;
-  } */
   .container div {
     margin-top: 30px;
     height: 65px;
