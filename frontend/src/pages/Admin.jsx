@@ -13,6 +13,7 @@ import FormAdmin from 'components/FormAdmin'
 const Admin = ({ setUserInfo }) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const { data: teachers, isLoading: isTeachersLoading } = useQuery({
   	queryKey: ['teachers'],
@@ -57,16 +58,20 @@ const Admin = ({ setUserInfo }) => {
 
       <div>
         <AsideBar
+          text={'Студенты'}
           values={students}
+          isTeacher={true}
           isLoading={isLoading}
         >
           <motion.button whileTap={{ scale: .9 }} onClick={e => addUserAPI({ type: 'students' })}>+</motion.button>
         </AsideBar>
         <div className={editor}>
-          <FormAdmin />
+          <FormAdmin user={students?.find(user => user?.id === +id) || teachers?.find(user => user?.id === +id)}/>
 
           <AsideBar
+            text={'Преподователи'}
             values={teachers}
+            isTeacher={true}
             isLoading={isTeachersLoading}
           >
             <motion.button whileTap={{ scale: .9 }} onClick={e => addUserAPI({ type: 'teachers' })}>+</motion.button>

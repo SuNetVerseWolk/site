@@ -22,31 +22,9 @@ router.get('/:id', (req, res) => {
 
 	res.status(404).json(false);
 })
-// router.post('/:id', (req, res) => {
-// 	const
-// 		studentID = +req.params.id,
-// 		whatChange = req.body;
-
-// 	if (studentID) {
-// 		const
-// 			students = getStudents(),
-// 			student = students.find(student => student.id === studentID);
-
-// 		if (!student) return res.status(404).json('student not found');
-
-// 		Object.keys(whatChange).forEach(key => {
-// 			if (key !== 'password' || (key === 'password' && !!whatChange[key]))
-// 				student[key] = whatChange[key]
-// 		});
-
-// 		if (setStudents(students))
-// 			return res.status(200).json({ id: studentID });
-// 	}
-
-// 	res.status(500).json(false);
-// })
 router.delete('/:id', (req, res) => {
 	const people = getStudents();
+	console.log("student", 'delete')
 
 	res.sendStatus(setStudents(people.filter(person => person.id != +req.params.id)) ? 200 : 500);
 })

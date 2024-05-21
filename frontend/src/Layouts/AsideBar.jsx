@@ -4,6 +4,7 @@ import React from 'react'
 import { asideBar, warn } from 'styles/asideBar.module.css'
 
 const AsideBar = ({
+	text,
 	index,
 	values,
 	children,
@@ -16,6 +17,9 @@ const AsideBar = ({
 }) => {
 	return (
 		<motion.div className={asideBar}>
+			{text && (
+				<h2>{text}</h2>
+			)}
 			{
 				isLoading ? (
 					<div className={warn}>Загрузка...</div>

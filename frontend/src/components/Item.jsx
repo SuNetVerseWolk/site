@@ -6,8 +6,8 @@ const Item = ({ index, teacherID, children, isEditable, setIsEditable, saveChang
   const linkRef = useRef();
 
   return (
-    <motion.div whileInView={{ scale: 1 }} initial={{ scale: .9 }} id='activeItem' onBlur={e => saveChanges(e, index)} onClick={e => {
-        if (mayEdite) setIsEditable(true);
+    <motion.div whileInView={{ scale: 1 }} initial={{ scale: .9 }} id='activeItem' onBlur={e => saveChanges && saveChanges(e, index)} onClick={e => {
+        if (mayEdite && setIsEditable) setIsEditable(true);
 
         linkRef.current.focus();
         linkRef.current.click();
