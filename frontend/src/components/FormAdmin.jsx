@@ -14,12 +14,12 @@ const FormAdmin = () => {
           <label htmlFor="password">Пароль: <img src="/padlock.png" alt="" /></label>
           <input name='password' id='password' type="password" placeholder='Пароль' required />
 
-          <motion.button className={styles.add} whileTap={{ scaleX: .85, scaleY: .95 }}>Добавить</motion.button>
-          <motion.button className={styles.delete} whileTap={{ scaleX: .85, scaleY: .95 }}>Удалить</motion.button>
+          {/* <motion.button className={styles.add} whileTap={{ scaleX: .85, scaleY: .95 }}>Добавить</motion.button>
+          <motion.button className={styles.delete} whileTap={{ scaleX: .85, scaleY: .95 }}>Удалить</motion.button> */}
 
           <div>
-            <button>Студент</button>
-            <button>Преподаватель</button>
+            <button>Добавить</button>
+            <button className={styles.delete}>Удалить</button>
           </div>
         {/* <Warn localRef={warn}>{warnText}</Warn> */}
         </form>
