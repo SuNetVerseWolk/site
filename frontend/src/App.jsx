@@ -9,7 +9,7 @@ function App() {
   const [userInfo, setUserInfo] = useState(localStorage.getItem('info') && JSON.parse(localStorage.getItem('info')));
 	const main = useMemo(e =>
 		userInfo?.id === import.meta.env.VITE_ADMIN_ID ? (
-			<Admin />
+			<Admin setUserInfo={setUserInfo} />
 		) : userInfo ? (
 			<Materials userInfo={userInfo} setUserInfo={setUserInfo} />
 		) : (

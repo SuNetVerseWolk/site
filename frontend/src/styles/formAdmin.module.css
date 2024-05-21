@@ -66,15 +66,14 @@
     border-radius: 100px;
     margin-left: 20px;
   }
-  .delete {
-    background: #e46d6d;
-  }
-  .delete:hover {
-    background: #dc4242;
-  }
   .container div {
     margin-top: 30px;
     height: 65px;
+    
+    .delete:hover {
+      background: #e46d6d;
+      color: #fff;
+    }
   }
   .container div button {
     height: 100%;

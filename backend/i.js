@@ -85,10 +85,6 @@ app.post('/user/change', (req, res) => {
 	res.status(500).json(false);
 })
 app.post('/logIn', (req, res) => {
-	console.log(
-		req.body.name, process.env.ADMIN_NAME
-		,
-		req.body.password, process.env.ADMIN_PASSWORD);
 	if (
 		req.body.name === process.env.ADMIN_NAME
 		&&
@@ -152,6 +148,18 @@ app.post('/signUp', (req, res) => {
 	}
 	if (setData(dataPaths.students, [...students, user])) return res.status(201).json({ id: user.id, type: dataPaths.students });
 	res.status(500).json(false);
+})
+
+app.post('/users', (req, res) => {
+	if (!req.body.type || req.query.key !== process.env.ADMIN_ID) return res.sendStatus(403);
+
+	const user = { ...req.body, id: Date.now(), name: '', password: '' }
+	const users = getData(user.type);
+
+	users.push(user);
+
+	if (setData(user.type, users)) return res.status(201).json({ type: user.type});
+	res.sendStatus(500);
 })
 
 app.listen(port, e => console.log(`Запущено!!!`));

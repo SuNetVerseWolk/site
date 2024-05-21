@@ -1,8 +1,11 @@
 import React from 'react'
 import styles from 'styles/formAdmin.module.css'
 import { motion } from 'framer-motion'
+import { useParams } from 'react-router-dom'
 
 const FormAdmin = () => {
+  const { id } = useParams();
+
   return (
     <div className={styles.container}>
         <form>
@@ -18,8 +21,8 @@ const FormAdmin = () => {
           <motion.button className={styles.delete} whileTap={{ scaleX: .85, scaleY: .95 }}>Удалить</motion.button> */}
 
           <div>
-            <button>Добавить</button>
-            <button className={styles.delete}>Удалить</button>
+            <button disabled={!id}>Сохранить</button>
+            <button className={styles.delete}  disabled={!id}>Удалить</button>
           </div>
         {/* <Warn localRef={warn}>{warnText}</Warn> */}
         </form>
