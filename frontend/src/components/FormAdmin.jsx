@@ -42,7 +42,7 @@ const FormAdmin = ({ user }) => {
             id='name'
             name='name'
             type="text"
-            value={userData?.name}
+            value={userData?.name || ''}
             placeholder='Фамилия Имя Отчество'
             onChange={changeInput}
             required
@@ -53,7 +53,7 @@ const FormAdmin = ({ user }) => {
             name='password'
             id='password'
             type="password"
-            value={userData?.password}
+            value={userData?.password || ''}
             placeholder='Пароль'
             onChange={changeInput}
             required
