@@ -7,21 +7,55 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import AsideBar from 'src/Layouts/AsideBar'
 import styles from 'styles/presStyle.module.css';
-import Popup from 'src/Layouts/Popup';
 import FormAdmin from 'components/FormAdmin'
 
 const Admin = ({ setUserInfo }) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { id } = useParams();
+  const [isDeleted, setIsDeleted] = useState(false);
 
+  
+  const getCurrentType = e => {
+    const student = students?.find(user => user?.id === +id);
+
+    if (student) return 'students';
+    
+    const teacher = teachers?.find(user => user?.id === +id);
+
+    if (teacher) return 'teachers';
+  }
   const { data: teachers, isLoading: isTeachersLoading } = useQuery({
   	queryKey: ['teachers'],
-  	queryFn: e => axios.get('/api/teachers').then(data => data.data)
+  	queryFn: e => axios.get('/api/teachers').then(data => {
+      if (!isDeleted && teachers && teachers.length !== data.data.length)
+        navigate(`/${data.data[data.data.length - 1].id}/${data.data[data.data.length - 1].id}`, { replace: true });
+
+      if (isDeleted && getCurrentType() === 'teachers') {
+        setIsDeleted(false);
+        const i = teachers.findIndex(user => user.id === +id);
+
+        navigate(`/${data.data?.[i > data.data.length - 1 ? 0 : i].id}/${data.data?.[i > data.data.length - 1 ? 0 : i].id}`);
+      }
+
+      return data.data
+    })
   });
   const { data: students, isLoading } = useQuery({
   	queryKey: ['students'],
-  	queryFn: e => axios.get(`/api/students`).then(data => data.data)
+  	queryFn: e => axios.get(`/api/students`).then(data => {
+      if (!isDeleted && students && students.length !== data.data.length)
+        navigate(`/${data.data[data.data.length - 1].id}/${data.data[data.data.length - 1].id}`, { replace: true });
+      
+      if (isDeleted && getCurrentType() === 'students') {
+        setIsDeleted(false);
+        const i = students.findIndex(user => user.id === +id);
+
+        navigate(`/${data.data?.[i > data.data.length - 1 ? 0 : i].id}/${data.data?.[i > data.data.length - 1 ? 0 : i].id}`);
+      }
+
+      return data.data
+    })
   });
 
   const { mutate: addUserAPI } = useMutation({
@@ -37,8 +71,13 @@ const Admin = ({ setUserInfo }) => {
     setUserInfo('');
 
     localStorage.removeItem('info', '');
-    navigate('/login');
+    navigate('');
   }
+
+  useEffect(e => {
+    if (!id && students?.[0].id)
+      return navigate(`${students?.[0].id}/${students?.[0].id}`);
+  }, [id, students, teachers]);
 
   return (
     <div className={presContainer}>
@@ -66,7 +105,7 @@ const Admin = ({ setUserInfo }) => {
           <motion.button whileTap={{ scale: .9 }} onClick={e => addUserAPI({ type: 'students' })}>+</motion.button>
         </AsideBar>
         <div className={editor}>
-          <FormAdmin user={students?.find(user => user?.id === +id) || teachers?.find(user => user?.id === +id)}/>
+          <FormAdmin setIsDeleted={setIsDeleted} user={students?.find(user => user?.id === +id) || teachers?.find(user => user?.id === +id)}/>
 
           <AsideBar
             text={'Преподователи'}

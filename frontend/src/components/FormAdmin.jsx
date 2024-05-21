@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import styles from 'styles/formAdmin.module.css'
 
-const FormAdmin = ({ user }) => {
+const FormAdmin = ({ user, setIsDeleted }) => {
   const queryClient = useQueryClient();
   const form = useRef();
   const [userData, setUserData] = useState(user);
@@ -61,9 +61,11 @@ const FormAdmin = ({ user }) => {
 
           <div>
             <button disabled={!user} onClick={e => mutate(getFormData())}>Сохранить</button>
-            <button className={styles.delete} disabled={!user} onClick={deleteUserAPI}>Удалить</button>
+            <button type='button' className={styles.delete} disabled={!user} onClick={e => {
+              setIsDeleted(true);
+              deleteUserAPI();
+            }}>Удалить</button>
           </div>
-        {/* <Warn localRef={warn}>{warnText}</Warn> */}
         </form>
     </div>
   )

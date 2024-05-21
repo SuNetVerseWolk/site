@@ -20,6 +20,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
 	const [fontSize, setFontSize] = useState('');
 	const navigate = useNavigate();
 	const [open, setIsOpened] = useState(false);
+	const [isDeleted, setIsDeleted] = useState(false);
 
 	const inputs = useMemo(e => [
 		{
@@ -57,18 +58,23 @@ const Materials = ({ setUserInfo, userInfo }) => {
 			.then(data => {
 				if (!isTeacher)
 					navigate(`/${data.data[0].id}/${teacherID}`, { replace: true });
-
-				if (values && values.length !== data.data.length)
-					navigate(`/${data.data[data.data.length - 1].id}/${teacherID}`, { replace: true });
-
 				if (!values && isTeacher)
 					navigate(`/${data.data[0].id}/undefined`, { replace: true });
+
+				if (!isDeleted && values && values.length !== data.data.length)
+					navigate(`/${data.data[data.data.length - 1].id}/${teacherID}`, { replace: true });
+				if (isDeleted) {
+					setIsDeleted(false);
+					const i = values.findIndex(user => user.id === +id);
+			
+					navigate(`/${data.data?.[i > data.data.length - 1 ? 0 : i].id}/${data.data?.[i > data.data.length - 1 ? 0 : i].id}`);
+				}
 
 				return data.data;
 			}),
 		enabled: isTeacher || !!teachers
 	});
-	const { data: text, isLoading: isTextLoading, isFetching } = useQuery({
+	const { data: text, isLoading: isTextLoading } = useQuery({
 		queryKey: ['text', id, isTeacher ? userInfo.id : teacherID],
 		queryFn: e => axios.get(`/api/text/${id}?teacherID=${isTeacher ? userInfo.id : teacherID}`)
 			.then(data => {
@@ -185,7 +191,10 @@ const Materials = ({ setUserInfo, userInfo }) => {
 		},
 		{
 			src: '/delete.png',
-			onClick: e => deleteItemAPI()
+			onClick: e => {
+				setIsDeleted(true);
+				deleteItemAPI();
+			}
 		}
 	], [id, isPending]);
 

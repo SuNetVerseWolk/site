@@ -24,7 +24,6 @@ router.get('/:id', (req, res) => {
 })
 router.delete('/:id', (req, res) => {
 	const people = getStudents();
-	console.log("student", 'delete')
 
 	res.sendStatus(setStudents(people.filter(person => person.id != +req.params.id)) ? 200 : 500);
 })
