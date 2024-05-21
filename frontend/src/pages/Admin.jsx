@@ -14,7 +14,6 @@ const Admin = ({ setUserInfo }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [isDeleted, setIsDeleted] = useState(false);
-
   
   const getCurrentType = e => {
     const student = students?.find(user => user?.id === +id);
@@ -85,10 +84,8 @@ const Admin = ({ setUserInfo }) => {
         <h1>Админ</h1>
 
         <div>
-          <div>
-            <button className={styles.name}>
-              Admin
-            </button>
+          <div className={styles.name}>
+            Admin
           </div>
 
           <motion.button className={styles.button} whileTap={{ scaleX: .85, scaleY: .95 }} onClick={exit}><img src="/logout.png" alt="..." /></motion.button>
@@ -108,7 +105,7 @@ const Admin = ({ setUserInfo }) => {
           <FormAdmin setIsDeleted={setIsDeleted} user={students?.find(user => user?.id === +id) || teachers?.find(user => user?.id === +id)}/>
 
           <AsideBar
-            text={'Преподователи'}
+            text={'Преподаватели'}
             values={teachers}
             isTeacher={true}
             isLoading={isTeachersLoading}
