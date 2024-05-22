@@ -260,7 +260,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
 					) : (
 						<AsideBar
 							index={+id}
-							values={teachers}
+							values={[teachers?.[0]]}
 							saveItem={saveItem}
 							isTeacher={isTeacher}
 							isEditable={isEditable}
