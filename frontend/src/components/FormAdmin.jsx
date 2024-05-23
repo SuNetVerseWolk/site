@@ -3,16 +3,18 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import styles from 'styles/formAdmin.module.css'
 
-const FormAdmin = ({ user, setIsDeleted }) => {
+const FormAdmin = ({ user, setIsDeleted, getCurrentType }) => {
   const queryClient = useQueryClient();
   const form = useRef();
   const [userData, setUserData] = useState(user);
 
   const { mutate: deleteUserAPI } = useMutation({
-    mutationFn: async data => await axios.delete(`/api/${user.type}/${user.id}`, data),
+    mutationFn: async data => await axios.delete(`/api/${getCurrentType()}/${user.id}`, data),
     onSuccess: res => {
-      queryClient.invalidateQueries(['students']);
-      queryClient.invalidateQueries(['teachers']);
+      setIsDeleted(true);
+      if (queryClient.getQueryData([res.data.type]).length === 1)
+        queryClient.setQueryData([res.data.type], data => data.filter(data => data.id != user.id));
+      queryClient.invalidateQueries([getCurrentType()]);
     },
     onError: res => { },
     retry: 3

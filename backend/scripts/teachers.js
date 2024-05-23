@@ -25,7 +25,7 @@ router.get('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
 	const people = getTeachers();
 
-	res.sendStatus(setTeachers(people.filter(person => person.id != +req.params.id)) ? 200 : 500);
+	res.status(setTeachers(people.filter(person => person.id != +req.params.id)) ? 200 : 500).json({type: 'teachers'});
 })
 
 module.exports = router;

@@ -102,7 +102,7 @@ const Admin = ({ setUserInfo }) => {
           <motion.button whileTap={{ scale: .9 }} onClick={e => addUserAPI({ type: 'students' })}>+</motion.button>
         </AsideBar>
         <div className={editor}>
-          <FormAdmin setIsDeleted={setIsDeleted} user={students?.find(user => user?.id === +id) || teachers?.find(user => user?.id === +id)}/>
+          <FormAdmin getCurrentType={getCurrentType} setIsDeleted={setIsDeleted} user={students?.find(user => user?.id === +id) || teachers?.find(user => user?.id === +id)}/>
 
           <AsideBar
             text={'Преподаватели'}
