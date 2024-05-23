@@ -24,6 +24,10 @@ router.get('/:id', (req, res) => {
 })
 router.delete('/:id', (req, res) => {
 	const people = getTeachers();
+	let teachersMaterials = getData('teachersMaterials');
+
+	teachersMaterials = teachersMaterials.filter(material => material.teacherID != +req.params.id);
+	setData('teachersMaterials', teachersMaterials);
 
 	res.status(setTeachers(people.filter(person => person.id != +req.params.id)) ? 200 : 500).json({type: 'teachers'});
 })
