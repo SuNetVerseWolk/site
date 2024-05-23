@@ -24,18 +24,18 @@ const AsideBar = ({
 				isLoading ? (
 					<div className={warn}>Загрузка...</div>
 				) : (
-					values?.length ? (
+					values?.length > 0 ? (
 						values.map((item) => (
 							<Item
-								key={item.id}
-								index={index || item.id}
-								teacherID={teacherID || item.id}
+								key={item?.id}
+								index={index || item?.id}
+								teacherID={teacherID || item?.id}
 								saveChanges={saveItem}
 								isEditable={isEditable}
 								setIsEditable={setIsEditable}
 								mayEdite={isTeacher}
 							>
-								{item.value || item.name}
+								{item?.value || item?.name}
 							</Item>
 						))
 					) : (

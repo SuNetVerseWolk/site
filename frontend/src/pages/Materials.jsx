@@ -122,7 +122,12 @@ const Materials = ({ setUserInfo, userInfo }) => {
 			return await axios.delete(`/api/teachersMaterials/${id}?teacherID=${userInfo.id}`).then(data => data)
 		},
 		onSuccess: res => {
-			queryClient.invalidateQueries(['teachersMaterials', isTeacher ? userInfo.id : teacherID])
+			const key = ['teachersMaterials', isTeacher ? userInfo.id : teacherID];
+
+			console.log(queryClient.getQueryData(key))
+			if (queryClient.getQueryData(key).length === 1)
+				queryClient.setQueryData(key, data => data.filter(data => data.id != id));
+			queryClient.invalidateQueries(key)
 		},
 		onError: res => { },
 		retry: 3
@@ -200,7 +205,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
 
 	useEffect(e => {
 		if ((!teacherID || teacherID === 'undefined') && !id || !values?.find(value => value.id === +id))
-			navigate(`./${values?.[0].id}/${teacherID || isTeacher ? teacherID : teachers?.[0].id}`, { replace: true });
+			navigate(`./${values?.[0]?.id}/${teacherID || isTeacher ? teacherID : teachers?.[0]?.id}`, { replace: true });
 	}, [teacherID, id]);
 
 	return (
@@ -260,7 +265,7 @@ const Materials = ({ setUserInfo, userInfo }) => {
 					) : (
 						<AsideBar
 							index={+id}
-							values={[teachers?.[0]]}
+							values={teachers?.length ? teachers : []}
 							saveItem={saveItem}
 							isTeacher={isTeacher}
 							isEditable={isEditable}
