@@ -2,7 +2,9 @@ const
 express = require('express'),
 getData = require('./getData'),
 setData = require('./setData'),
-router = express.Router();
+deleteText = require('./deleteText'),
+router = express.Router(),
+fs = require('fs');
 
 const getTeachers = e => getData('teachers');
 const setTeachers = data => setData('teachers', data);
@@ -25,6 +27,9 @@ router.get('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
 	const people = getTeachers();
 	let teachersMaterials = getData('teachersMaterials');
+	const deletingMaterial = teachersMaterials.find(material => material.teacherID === +req.params.id);
+
+	deletingMaterial.materials.forEach(material => deleteText(material.textID));
 
 	teachersMaterials = teachersMaterials.filter(material => material.teacherID != +req.params.id);
 	setData('teachersMaterials', teachersMaterials);

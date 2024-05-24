@@ -74,8 +74,13 @@ const Admin = ({ setUserInfo }) => {
   }
 
   useEffect(e => {
-    if (!id && students?.[0]?.id)
-      return navigate(`${students?.[0].id}/${students?.[0].id}`);
+    if (!id) {
+      if (students?.[0]?.id)
+        navigate(`${students?.[0].id}/${students?.[0].id}`);
+      else if (teachers?.[0]?.id)
+        navigate(`${teachers?.[0].id}/${teachers?.[0].id}`);
+    }
+
   }, [id, students, teachers]);
 
   return (
