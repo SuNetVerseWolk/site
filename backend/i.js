@@ -48,12 +48,13 @@ app.post('/text/:id', (req, res) => {
 		dataIndex = data.findIndex(data => data.teacherID === +req.query.teacherID),
 		material = data[dataIndex].materials.find(material => material.id === itemId);
 
-	if (material.textID && req.body.text)
+	if (material.textID && req.body.text) {
 		fs.writeFile(`./data/texts/${material.textID}.txt`, JSON.stringify(req.body), error => {
 			if (error) res.status(500)
 
 			res.status(200).json({ id: itemId })
 		});
+	}
 	else {
 		res.status(500)
 		return;
@@ -162,4 +163,9 @@ app.post('/users', (req, res) => {
 	res.sendStatus(500);
 })
 
-app.listen(port, e => console.log(`Запущено!!!`));
+app.listen(port, e => {
+	fs.access('./data/texts', err => {
+		if (err) fs.mkdirSync('./data/texts')
+	})
+	console.log(`Запущено!!!`)
+});
